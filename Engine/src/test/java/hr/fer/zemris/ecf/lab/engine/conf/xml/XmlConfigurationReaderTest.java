@@ -37,7 +37,7 @@ public class XmlConfigurationReaderTest {
 
     @Test
     public void testReadArchive() throws Exception {
-        File file = new File("res/_test_parameters.xml");
+        File file = new File("res/test/parameters1.xml");
         System.out.println(file.getAbsolutePath());
         Configuration conf = reader.readArchive(file);
 
@@ -46,7 +46,7 @@ public class XmlConfigurationReaderTest {
 
         EntryBlock alg1 = algs.get(0);
         assertTrue(alg1.getName().equals("RouletteWheel"));
-        assertEntryBlock(alg1, "crxprob", "0.5", "selpressure", "10");
+        assertEntryList(alg1, "crxprob", "0.5", "selpressure", "10");
 
         assertTrue(conf.genotypes.size() == 1);
         List<EntryBlock> genList = conf.genotypes.get(0);
@@ -55,12 +55,13 @@ public class XmlConfigurationReaderTest {
         EntryBlock gen1 = genList.get(0);
 
         assertTrue(gen1.getName().equals("BitString"));
-        assertEntryBlock(gen1, "size", "20");
+        assertEntryList(gen1, "size", "20");
 
-
+        EntryList reg = conf.registry;
+        assertEntryList(reg, "randomizer.seed", "0", "population.size", "30", "mutation.indprob", "0.3", "term.maxgen", "30", "log.level", "3", "log.filename", "log.txt");
     }
 
-    private void assertEntryBlock(EntryList block, String... keysValues) {
+    private void assertEntryList(EntryList block, String... keysValues) {
         int size = keysValues.length / 2;
         for (int i = 0; i < size; i++) {
             Entry entry = block.getEntryAt(i);
