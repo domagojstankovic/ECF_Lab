@@ -4,12 +4,12 @@ import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsProvider;
 import hr.fer.zemris.ecf.lab.view.ECFLab;
 import hr.fer.zemris.ecf.lab.view.Utils;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.conf.ConfigurationService;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.console.Observer;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.console.Subject;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.console.Job;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.param.*;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.task.TaskMannager;
+import hr.fer.zemris.ecf.lab.engine.conf.ConfigurationService;
+import hr.fer.zemris.ecf.lab.engine.console.Observer;
+import hr.fer.zemris.ecf.lab.engine.console.Subject;
+import hr.fer.zemris.ecf.lab.engine.console.Job;
+import hr.fer.zemris.ecf.lab.engine.param.*;
+import hr.fer.zemris.ecf.lab.engine.task.TaskMannager;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsKey;
 
 import java.awt.BorderLayout;

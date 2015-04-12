@@ -8,8 +8,8 @@ import javax.swing.JFrame;
 
 import hr.fer.zemris.ecf.lab.view.chart.ChartFrame;
 import hr.fer.zemris.ecf.lab.view.chart.LineChartPanel;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.log.Generation;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.log.reader.OfflineReading;
+import hr.fer.zemris.ecf.lab.engine.log.Generation;
+import hr.fer.zemris.ecf.lab.engine.log.reader.OfflineReading;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 

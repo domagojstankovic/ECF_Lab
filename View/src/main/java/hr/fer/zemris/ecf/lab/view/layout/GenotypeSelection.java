@@ -1,6 +1,6 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.param.Genotype;
+import hr.fer.zemris.ecf.lab.engine.param.Genotype;
 
 import java.util.List;
 

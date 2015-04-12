@@ -1,2 +1,8 @@
 apply plugin: 'application'
 mainClassName = 'hr.fer.zemris.ecf.lab.view.ECFLab'
+
+dependencies {
+    compile project(':Engine')
+    compile project(':Model')
+    compile 'jfree:jfreechart:1.0.12'
+}

@@ -1,7 +1,7 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.param.Entry;
-import hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.param.EntryBlock;
+import hr.fer.zemris.ecf.lab.engine.param.Entry;
+import hr.fer.zemris.ecf.lab.engine.param.EntryBlock;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
