@@ -11,14 +11,14 @@ import java.util.List;
 public class AlgGenRegUser {
 	
 	/**
-	 * List of {@link Algorithm} to be written in the algorithm block.
+	 * List of algorithms to be written in the algorithms block.
 	 */
-	public List<Algorithm> algorithm;
+	public List<EntryBlock> algorithms;
 	/**
-	 * List of list of {@link Genotype} to be written in the multiple genotype blocks.
-	 * One list of {@link Genotype} in one genotype block.
+	 * List of list of genotype to be written in the multiple genotype blocks.
+	 * One list of genotype in one genotype block.
 	 */
-	public List<List<Genotype>> genotypes;
+	public List<List<EntryBlock>> genotypes;
 	/**
 	 * {@link Registry} to be written into registry block.
 	 */
@@ -32,20 +32,20 @@ public class AlgGenRegUser {
 	 * Constructor it initializes genotypes outer list to new array list.
 	 */
 	public AlgGenRegUser() {
-		algorithm = new ArrayList<>();
+		algorithms = new ArrayList<>();
 		genotypes = new ArrayList<>();
 		registry = new Registry();
 	}
 
 	/**
 	 * Constructor it gets the reference to algorithms, genotypes blocks, genotypes blocks.
-	 * @param algorithm given algorithms.
+	 * @param algorithms given algorithms.
 	 * @param genotypes given genotypes blocks.
 	 * @param registry given registry.
 	 */
-	public AlgGenRegUser(List<Algorithm> algorithm, List<List<Genotype>> genotypes,
+	public AlgGenRegUser(List<EntryBlock> algorithms, List<List<EntryBlock>> genotypes,
 			Registry registry) {
-		this.algorithm = algorithm;
+		this.algorithms = algorithms;
 		this.genotypes = genotypes;
 		this.registry = registry;
 	}

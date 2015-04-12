@@ -26,16 +26,16 @@ public class EntryBlock {
 	}
 
 	/**
-	 * Getter for the algorithm/genotype name.
-	 * @return algorithm/genotype name
+	 * Getter for the algorithms/genotype name.
+	 * @return algorithms/genotype name
 	 */
 	public String getName() {
 		return name;
 	}
 	
 	/**
-	 * Setter for the algorithm/genotype name.
-	 * @param name algorithm/genotype name.
+	 * Setter for the algorithms/genotype name.
+	 * @param name algorithms/genotype name.
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -43,7 +43,7 @@ public class EntryBlock {
 	
 	/**
 	 * Getter for the entry list reference.
-	 * @return reference to the entry list for this algorithm/genotype.
+	 * @return reference to the entry list for this algorithms/genotype.
 	 */
 	public List<Entry> getEntryList() {
 		return entryList;
@@ -51,7 +51,7 @@ public class EntryBlock {
 	
 	/**
 	 * Setter for the entry list reference.
-	 * @param entryList pointer to the entry list for this algorithm/genotype.
+	 * @param entryList pointer to the entry list for this algorithms/genotype.
 	 */
 	public void setEntryList(List<Entry> entryList) {
 		this.entryList = entryList;

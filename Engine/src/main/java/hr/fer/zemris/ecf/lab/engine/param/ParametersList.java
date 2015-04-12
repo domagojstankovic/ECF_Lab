@@ -10,13 +10,13 @@ import java.util.List;
 public class ParametersList {
 	
 	/**
-	 * Array list of all available {@link Algorithm}s from ECF.
+	 * Array list of all available algorithms from ECF.
 	 */
-	public List<Algorithm> algorithms;
+	public List<EntryBlock> algorithms;
 	/**
-	 * Array list of all available {@link Genotype} form ECF.
+	 * Array list of all available genotypes form ECF.
 	 */
-	public List<Genotype> genotypes;
+	public List<EntryBlock> genotypes;
 	/**
 	 * {@link Registry} from ECF.
 	 */
@@ -36,7 +36,7 @@ public class ParametersList {
 	 * @param genotypes given genotypes list pointer
 	 * @param registry given registry pointer
 	 */
-	public ParametersList(List<Algorithm> algorithms, List<Genotype> genotypes,
+	public ParametersList(List<EntryBlock> algorithms, List<EntryBlock> genotypes,
                           Registry registry) {
 		this.algorithms = algorithms;
 		this.genotypes = genotypes;

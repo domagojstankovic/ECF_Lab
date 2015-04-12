@@ -15,9 +15,7 @@ import javax.xml.transform.stream.StreamResult;
 import hr.fer.zemris.ecf.lab.engine.conf.ConfigurationWriter;
 import hr.fer.zemris.ecf.lab.engine.param.*;
 import hr.fer.zemris.ecf.lab.engine.param.AlgGenRegUser;
-import hr.fer.zemris.ecf.lab.engine.param.Algorithm;
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
-import hr.fer.zemris.ecf.lab.engine.param.Genotype;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,14 +59,14 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 		Element rootElement = doc.createElement("ECF");
 		doc.appendChild(rootElement);
 		
-		if(!agrw.algorithm.isEmpty()){
+		if(!agrw.algorithms.isEmpty()){
 			Element algorithms = doc.createElement("Algorithm");
 			algorithm(algorithms, doc, agrw);
 			rootElement.appendChild(algorithms);
 		}
 		
 		
-		for (List<Genotype> gList : agrw.genotypes){
+		for (List<EntryBlock> gList : agrw.genotypes){
 			if(!gList.isEmpty()){
 				Element genotypes = doc.createElement("Genotype");
 				genotype(genotypes, doc,gList);
@@ -110,14 +108,14 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	}
 
 	/**
-	 * This method is used to write the {@link Genotype} list with given {@link org.w3c.dom.Document}.
+	 * This method is used to write the genotype list with given {@link org.w3c.dom.Document}.
 	 * @param genotypes genotype {@link org.w3c.dom.Element} class to be written on the document.
 	 * @param doc document to be written on.
-	 * @param gList given {@link Genotype} list.
+	 * @param gList given genotype list.
 	 */
-	private void genotype(Element genotypes, Document doc, List<Genotype> gList) {
+	private void genotype(Element genotypes, Document doc, List<EntryBlock> gList) {
 		
-		for(Genotype genotype : gList) {
+		for(EntryBlock genotype : gList) {
 			Element genType = doc.createElement(genotype.getName());
 			
 			List<Entry> eList = genotype.getEntryList();
@@ -137,14 +135,14 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	}
 
 	/**
-	 * This method is used to write the {@link Algorithm} list with given {@link org.w3c.dom.Document}.
-	 * @param algorithms algorithm {@link org.w3c.dom.Element} class to be written on the document.
+	 * This method is used to write the algorithm list with given {@link org.w3c.dom.Document}.
+	 * @param algorithms algorithms {@link org.w3c.dom.Element} class to be written on the document.
 	 * @param doc document to be written on.
 	 */
 	private void algorithm(Element algorithms, Document doc, AlgGenRegUser agrw) {
 		
-		List<Algorithm> aList = agrw.algorithm;
-		for(Algorithm algorithm : aList){
+		List<EntryBlock> aList = agrw.algorithms;
+		for(EntryBlock algorithm : aList){
 			Element algType = doc.createElement(algorithm.getName());
 			
 			List<Entry> eList = algorithm.getEntryList();

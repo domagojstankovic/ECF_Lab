@@ -47,24 +47,6 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	 * and saved within an archive.
 	 * 
 	 * @param file
-	 *            path to the parameters (.xml)
-	 * @return AlgGenReg4Writing class filled with necessary data.
-	 */
-	public AlgGenRegUser readArchive(String file) {
-		try {
-			return readingArchive(file);
-		} catch (SAXException | IOException | ParserConfigurationException e) {
-			System.err.println("Error ocured while trying to gather initial data given by ECF in xml form.");
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * This class is used for parsing parameters that was user defined earlier
-	 * and saved within an archive.
-	 * 
-	 * @param file
 	 *            parameters file (.xml)
 	 * @return AlgGenReg4Writing class filled with necessary data.
 	 */
@@ -127,24 +109,6 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	 * and saved within an archive.
 	 * 
 	 * @param file
-	 *            path to the parameters.
-	 * @throws org.xml.sax.SAXException
-	 *             in case of problem.
-	 * @throws java.io.IOException
-	 *             in case of problem.
-	 * @throws javax.xml.parsers.ParserConfigurationException
-	 *             in case of problem.
-	 */
-	private AlgGenRegUser readingArchive(String file) throws SAXException, IOException, ParserConfigurationException {
-		File fXmlFile = new File(file);
-		return readingArchive(fXmlFile);
-	}
-
-	/**
-	 * This class is used for parsing parameters that was user defined earlier
-	 * and saved within an archive.
-	 * 
-	 * @param file
 	 *            parameters file.
 	 * @throws org.xml.sax.SAXException
 	 *             in case of problem.
@@ -172,12 +136,12 @@ public class XmlConfigurationReader implements ConfigurationReader {
 		}
 
 		NodeList algGenReg = tempNode.getChildNodes();
-		ArrayList<Genotype> genList = new ArrayList<>();
+		ArrayList<EntryBlock> genList = new ArrayList<>();
 		agru.genotypes.add(genList);
 		for (int count = 0; count < algGenReg.getLength(); count++) {
 			switch (algGenReg.item(count).getNodeName()) {
 			case "Algorithm":
-				algorithm(algGenReg.item(count), agru.algorithm);
+				algorithm(algGenReg.item(count), agru.algorithms);
 				break;
 			case "Genotype":
 				genotype(algGenReg.item(count), genList);
@@ -221,22 +185,22 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	}
 
 	/**
-	 * This method is used to fill the given {@link Genotype} list with given
+	 * This method is used to fill the given genotype list with given
 	 * {@link org.w3c.dom.Node}.
 	 * 
 	 * @param item
 	 *            node containing the genotype block.
 	 * @param genList
-	 *            {@link Genotype} list to be filled from node.
+	 *            Genotype list to be filled from node.
 	 */
-	private void genotype(Node item, List<Genotype> genList) {
+	private void genotype(Node item, List<EntryBlock> genList) {
 		NodeList genotypes = item.getChildNodes();
 
 		for (int j = 0; j < genotypes.getLength(); j++) {
 			Node genotype = genotypes.item(j);
 
 			if (genotype.getNodeType() == Node.ELEMENT_NODE) {
-				Genotype gen = new Genotype(genotype.getNodeName());
+				EntryBlock gen = new EntryBlock(genotype.getNodeName());
 
 				// System.out.println(gen.getName());
 
@@ -262,22 +226,22 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	}
 
 	/**
-	 * This method is used to fill the given {@link Algorithm} list with given
+	 * This method is used to fill the given algorithm list with given
 	 * {@link org.w3c.dom.Node}.
 	 * 
 	 * @param item
-	 *            node containing the algorithm block.
+	 *            node containing the algorithms block.
 	 * @param algorithmsList
-	 *            {@link Algorithm} list to be filled from node.
+	 *            Algorithm list to be filled from node.
 	 */
-	private void algorithm(Node item, List<Algorithm> algorithmsList) {
+	private void algorithm(Node item, List<EntryBlock> algorithmsList) {
 		NodeList algorithms = item.getChildNodes();
 
 		for (int j = 0; j < algorithms.getLength(); j++) {
 			Node algorithm = algorithms.item(j);
 
 			if (algorithm.getNodeType() == Node.ELEMENT_NODE) {
-				Algorithm alg = new Algorithm(algorithm.getNodeName());
+				EntryBlock alg = new EntryBlock(algorithm.getNodeName());
 				// System.out.println(alg.getName());
 
 				NodeList algorithmParams = algorithm.getChildNodes();

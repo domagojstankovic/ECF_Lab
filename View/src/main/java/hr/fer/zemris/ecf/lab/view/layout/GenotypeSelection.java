@@ -1,6 +1,6 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
-import hr.fer.zemris.ecf.lab.engine.param.Genotype;
+import hr.fer.zemris.ecf.lab.engine.param.EntryBlock;
 
 import java.util.List;
 
@@ -9,11 +9,11 @@ import java.util.List;
  * @author Domagoj Stanković
  * @version 1.0
  */
-public class GenotypeSelection extends DropDownPanel<Genotype> {
+public class GenotypeSelection extends DropDownPanel<EntryBlock> {
 
 	private static final long serialVersionUID = 1L;
 	
-	public GenotypeSelection(List<Genotype> blocks) {
+	public GenotypeSelection(List<EntryBlock> blocks) {
 		super(blocks);
 	}
 

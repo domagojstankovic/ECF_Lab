@@ -1,7 +1,6 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
-import hr.fer.zemris.ecf.lab.model.settings.SettingsProvider;
 import hr.fer.zemris.ecf.lab.view.ECFLab;
 import hr.fer.zemris.ecf.lab.view.Utils;
 import hr.fer.zemris.ecf.lab.engine.conf.ConfigurationService;
@@ -10,7 +9,6 @@ import hr.fer.zemris.ecf.lab.engine.console.Subject;
 import hr.fer.zemris.ecf.lab.engine.console.Job;
 import hr.fer.zemris.ecf.lab.engine.param.*;
 import hr.fer.zemris.ecf.lab.engine.task.TaskMannager;
-import hr.fer.zemris.ecf.lab.model.settings.SettingsKey;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -43,8 +41,8 @@ public class ParametersSelection extends JPanel implements Observer {
 	private static final boolean DAEMON = false;
 
 	private ECFLab parent;
-	private EntryBlockSelection<Algorithm> algSel;
-	private EntryBlockSelection<Genotype> genSel;
+	private EntryBlockSelection<EntryBlock> algSel;
+	private EntryBlockSelection<EntryBlock> genSel;
 	private EntryListPanel regList;
 	private String ecfPath;
 	private DefinePanel definePanel;
@@ -181,19 +179,19 @@ public class ParametersSelection extends JPanel implements Observer {
 	 */
 	public AlgGenRegUser getParameters() {
 		// Algorithm filling
-		List<EntryFieldDisplay<Algorithm>> algList = algSel.getAddedEntries();
-		List<Algorithm> algs = new ArrayList<>(algList.size());
-		for (EntryFieldDisplay<Algorithm> a : algList) {
-			algs.add(new Algorithm(a.getBlock().getName(), a.getBlockDisplay().getSelectedEntries()));
+		List<EntryFieldDisplay<EntryBlock>> algList = algSel.getAddedEntries();
+		List<EntryBlock> algs = new ArrayList<>(algList.size());
+		for (EntryFieldDisplay<EntryBlock> a : algList) {
+			algs.add(new EntryBlock(a.getBlock().getName(), a.getBlockDisplay().getSelectedEntries()));
 		}
 
 		// Genotype filling
-		List<EntryFieldDisplay<Genotype>> genList = genSel.getAddedEntries();
-		List<Genotype> gens = new ArrayList<>(genList.size());
-		for (EntryFieldDisplay<Genotype> g : genList) {
-			gens.add(new Genotype(g.getBlock().getName(), g.getBlockDisplay().getSelectedEntries()));
+		List<EntryFieldDisplay<EntryBlock>> genList = genSel.getAddedEntries();
+		List<EntryBlock> gens = new ArrayList<>(genList.size());
+		for (EntryFieldDisplay<EntryBlock> g : genList) {
+			gens.add(new EntryBlock(g.getBlock().getName(), g.getBlockDisplay().getSelectedEntries()));
 		}
-		List<List<Genotype>> genBlock = new ArrayList<>(1);
+		List<List<EntryBlock>> genBlock = new ArrayList<>(1);
 		genBlock.add(gens);
 
 		// Registry filling
@@ -207,7 +205,7 @@ public class ParametersSelection extends JPanel implements Observer {
 		Registry reg = new Registry(entries);
 
 		AlgGenRegUser temp = new AlgGenRegUser();
-		temp.algorithm = algs;
+		temp.algorithms = algs;
 		temp.genotypes = genBlock;
 		temp.registry = reg;
 		return temp;
@@ -217,7 +215,7 @@ public class ParametersSelection extends JPanel implements Observer {
 	 * @return {@link AlgorithmSelection} from the selected
 	 *         {@link ParametersSelection} panel
 	 */
-	public EntryBlockSelection<Algorithm> getAlgSel() {
+	public EntryBlockSelection<EntryBlock> getAlgSel() {
 		return algSel;
 	}
 
@@ -225,7 +223,7 @@ public class ParametersSelection extends JPanel implements Observer {
 	 * @return {@link GenotypeSelection} from the selected
 	 *         {@link ParametersSelection} panel
 	 */
-	public EntryBlockSelection<Genotype> getGenSel() {
+	public EntryBlockSelection<EntryBlock> getGenSel() {
 		return genSel;
 	}
 
@@ -238,18 +236,18 @@ public class ParametersSelection extends JPanel implements Observer {
 	}
 
 	/**
-	 * @return Selected {@link Algorithm} from the selected
+	 * @return Selected algorithm from the selected
 	 *         {@link ParametersSelection} panel
 	 */
-	public Algorithm getSelectedAlgorithm() {
+	public EntryBlock getSelectedAlgorithm() {
 		return algSel.getSelectedItem();
 	}
 
 	/**
-	 * @return Selected {@link Genotype} from the selected
+	 * @return Selected genotype from the selected
 	 *         {@link ParametersSelection} panel
 	 */
-	public Genotype getSelectedGenotype() {
+	public EntryBlock getSelectedGenotype() {
 		return genSel.getSelectedItem();
 	}
 

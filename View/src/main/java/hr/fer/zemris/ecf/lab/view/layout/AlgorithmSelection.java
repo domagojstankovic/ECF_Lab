@@ -1,19 +1,19 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
-import hr.fer.zemris.ecf.lab.engine.param.Algorithm;
+import hr.fer.zemris.ecf.lab.engine.param.EntryBlock;
 
 import java.util.List;
 
 /**
- * Panel for algorithm selection.
+ * Panel for algorithms selection.
  * @author Domagoj Stanković
  * @version 1.0
  */
-public class AlgorithmSelection extends DropDownPanel<Algorithm> {
+public class AlgorithmSelection extends DropDownPanel<EntryBlock> {
 
 	private static final long serialVersionUID = 1L;
 
-	public AlgorithmSelection(List<Algorithm> list) {
+	public AlgorithmSelection(List<EntryBlock> list) {
 		super(list);
 	}
 

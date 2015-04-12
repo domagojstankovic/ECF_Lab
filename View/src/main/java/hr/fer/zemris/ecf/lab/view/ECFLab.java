@@ -411,8 +411,8 @@ public class ECFLab extends JFrame {
 			AlgGenRegUser agru = ConfigurationService.getInstance().getReader().readArchive(file);
 			ParametersSelection ps = newTab(file.getAbsolutePath());
 
-			List<Algorithm> algs = agru.algorithm;
-			for (Algorithm alg : algs) {
+			List<EntryBlock> algs = agru.algorithms;
+			for (EntryBlock alg : algs) {
 				List<Entry> entries = alg.getEntryList();
 				ps.getAlgSel().show(alg.getName());
 				EntryListPanel enp = ps.getAlgSel().getSelectedEntryList();
@@ -421,12 +421,12 @@ public class ECFLab extends JFrame {
 					efp.setSelected(true);
 					efp.setText(entry.value);
 				}
-				EntryBlockSelection<Algorithm> algSel = ps.getAlgSel();
+				EntryBlockSelection<EntryBlock> algSel = ps.getAlgSel();
 				algSel.add();
 			}
 
-			List<Genotype> gens = agru.genotypes.get(0);
-			for (Genotype gen : gens) {
+			List<EntryBlock> gens = agru.genotypes.get(0);
+			for (EntryBlock gen : gens) {
 				List<Entry> entries = gen.getEntryList();
 				ps.getGenSel().show(gen.getName());
 				EntryListPanel enp = ps.getGenSel().getSelectedEntryList();
@@ -435,7 +435,7 @@ public class ECFLab extends JFrame {
 					efp.setSelected(true);
 					efp.setText(entry.value);
 				}
-				EntryBlockSelection<Genotype> genSel = ps.getGenSel();
+				EntryBlockSelection<EntryBlock> genSel = ps.getGenSel();
 				genSel.add();
 			}
 
@@ -573,7 +573,7 @@ public class ECFLab extends JFrame {
 	/**
 	 * Object with all parameters from the selected ECF exe.
 	 * 
-	 * @return {@link hr.fer.zemris.ecf.lab.view.fer.zemris.ecf.engine.param.ParametersList} object with all the parameters from the
+	 * @return {@link hr.fer.zemris.ecf.lab.engine.param.ParametersList} object with all the parameters from the
 	 *         current ECF executable file.
 	 */
 	public ParametersList getParDump() {
