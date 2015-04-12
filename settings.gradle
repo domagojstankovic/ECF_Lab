@@ -1,2 +1,6 @@
 include 'Engine'
 
+include 'Model'
+
+include 'View'
+

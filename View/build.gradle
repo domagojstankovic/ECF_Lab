@@ -1,0 +1,2 @@
+apply plugin: 'application'
+mainClassName = 'hr.fer.zemris.ecf.lab.view.ECFLab'
