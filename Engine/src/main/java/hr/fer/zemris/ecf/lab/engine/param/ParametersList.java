@@ -18,9 +18,9 @@ public class ParametersList {
 	 */
 	public List<EntryBlock> genotypes;
 	/**
-	 * {@link Registry} from ECF.
+	 * Registry from ECF.
 	 */
-	public Registry registry;
+	public EntryList registry;
 	
 	/**
 	 * Constructor, it initializes algorithms and genotypes list to new array lists. 
@@ -37,7 +37,7 @@ public class ParametersList {
 	 * @param registry given registry pointer
 	 */
 	public ParametersList(List<EntryBlock> algorithms, List<EntryBlock> genotypes,
-                          Registry registry) {
+                          EntryList registry) {
 		this.algorithms = algorithms;
 		this.genotypes = genotypes;
 		this.registry = registry;

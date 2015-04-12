@@ -408,7 +408,7 @@ public class ECFLab extends JFrame {
 			}
 			File file = fc.getSelectedFile();
 			String absolutePath = file.getAbsolutePath();
-			AlgGenRegUser agru = ConfigurationService.getInstance().getReader().readArchive(file);
+			Configuration agru = ConfigurationService.getInstance().getReader().readArchive(file);
 			ParametersSelection ps = newTab(file.getAbsolutePath());
 
 			List<EntryBlock> algs = agru.algorithms;
@@ -439,7 +439,7 @@ public class ECFLab extends JFrame {
 				genSel.add();
 			}
 
-			Registry reg = agru.registry;
+			EntryList reg = agru.registry;
 			List<Entry> entries = reg.getEntryList();
 			EntryListPanel enp = ps.getRegList();
 			for (Entry entry : entries) {

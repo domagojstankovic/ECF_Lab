@@ -1,6 +1,6 @@
 package hr.fer.zemris.ecf.lab.engine.conf;
 
-import hr.fer.zemris.ecf.lab.engine.param.AlgGenRegUser;
+import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 
 import java.io.File;
 
@@ -9,6 +9,6 @@ import java.io.File;
  */
 public interface ConfigurationWriter {
 
-    void write(File file, AlgGenRegUser agrwGet);
+    void write(File file, Configuration agrwGet);
 
 }

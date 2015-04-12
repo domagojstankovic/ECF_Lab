@@ -14,7 +14,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import hr.fer.zemris.ecf.lab.engine.conf.ConfigurationWriter;
 import hr.fer.zemris.ecf.lab.engine.param.*;
-import hr.fer.zemris.ecf.lab.engine.param.AlgGenRegUser;
+import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
@@ -22,7 +22,7 @@ import org.w3c.dom.Element;
 
 /**
  * This class is only used for writing (creating) xml parameters files.
- * It has one public static method that writes given parameters in form of a {@link AlgGenRegUser} to given file path.
+ * It has one public static method that writes given parameters in form of a {@link Configuration} to given file path.
  * @version 1.0
  *
  */
@@ -33,7 +33,7 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	 * @param file path to write parameters to.
 	 * @param agrwGet class filled with needed parameters to give to ECF.
 	 */
-	public void write(File file, AlgGenRegUser agrwGet) {
+	public void write(File file, Configuration agrwGet) {
 		try {
 			writing(file, agrwGet);
 		} catch (ParserConfigurationException | TransformerException e) {
@@ -49,7 +49,7 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	 * @throws javax.xml.parsers.ParserConfigurationException in case of problem.
 	 * @throws javax.xml.transform.TransformerException in case of problem.
 	 */
-	private void writing(File file, AlgGenRegUser agrw) throws ParserConfigurationException, TransformerException {
+	private void writing(File file, Configuration agrw) throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		
@@ -94,7 +94,7 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	 * @param registry {@link org.w3c.dom.Element} class to be written on the document.
 	 * @param doc document to be written on.
 	 */
-	private void registry(Element registry, Document doc, AlgGenRegUser agrw) {
+	private void registry(Element registry, Document doc, Configuration agrw) {
 		List<Entry> eList = agrw.registry.getEntryList();
 		for(int i=0; i<eList.size(); i++){
 			Entry e = eList.get(i);
@@ -139,7 +139,7 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	 * @param algorithms algorithms {@link org.w3c.dom.Element} class to be written on the document.
 	 * @param doc document to be written on.
 	 */
-	private void algorithm(Element algorithms, Document doc, AlgGenRegUser agrw) {
+	private void algorithm(Element algorithms, Document doc, Configuration agrw) {
 		
 		List<EntryBlock> aList = agrw.algorithms;
 		for(EntryBlock algorithm : aList){

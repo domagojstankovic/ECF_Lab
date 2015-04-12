@@ -90,7 +90,7 @@ public class ParametersSelection extends JPanel implements Observer {
 	 */
 	protected void clicked() {
 		try {
-			AlgGenRegUser temp = getParameters();
+			Configuration temp = getParameters();
 			String file = definePanel.getParamsPath();
 			String log = definePanel.getLogPath();
 			lastLogFilePath = log;
@@ -174,10 +174,10 @@ public class ParametersSelection extends JPanel implements Observer {
 	 * Collects all the selected parameters from the selected
 	 * {@link ParametersSelection} panel.
 	 * 
-	 * @return {@link AlgGenRegUser} object containing all the selected
+	 * @return {@link Configuration} object containing all the selected
 	 *         parameters
 	 */
-	public AlgGenRegUser getParameters() {
+	public Configuration getParameters() {
 		// Algorithm filling
 		List<EntryFieldDisplay<EntryBlock>> algList = algSel.getAddedEntries();
 		List<EntryBlock> algs = new ArrayList<>(algList.size());
@@ -202,9 +202,9 @@ public class ParametersSelection extends JPanel implements Observer {
 				entries.add(new Entry(regList.getKeyAt(i), regList.getDescriptionAt(i), regList.getValueAt(i)));
 			}
 		}
-		Registry reg = new Registry(entries);
+		EntryList reg = new EntryList(entries);
 
-		AlgGenRegUser temp = new AlgGenRegUser();
+		Configuration temp = new Configuration();
 		temp.algorithms = algs;
 		temp.genotypes = genBlock;
 		temp.registry = reg;

@@ -53,7 +53,11 @@ public class Entry {
 	
 	@Override
 	public String toString() {
-		return key;
+		String str = key + " = " + value;
+		if (desc != null && !desc.trim().isEmpty()) {
+			str += " (" + desc + ")";
+		}
+		return str;
 	}
 
 }

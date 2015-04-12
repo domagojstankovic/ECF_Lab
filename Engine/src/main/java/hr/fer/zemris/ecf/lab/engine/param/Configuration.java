@@ -8,7 +8,7 @@ import java.util.List;
  * @version 1.0
  *
  */
-public class AlgGenRegUser {
+public class Configuration {
 	
 	/**
 	 * List of algorithms to be written in the algorithms block.
@@ -20,9 +20,9 @@ public class AlgGenRegUser {
 	 */
 	public List<List<EntryBlock>> genotypes;
 	/**
-	 * {@link Registry} to be written into registry block.
+	 * Registry to be written into registry block.
 	 */
-	public Registry registry;
+	public EntryList registry;
 	/**
 	 * User comments to be written at the beginning of the parameters file as the xml comment.
 	 */
@@ -31,10 +31,10 @@ public class AlgGenRegUser {
 	/**
 	 * Constructor it initializes genotypes outer list to new array list.
 	 */
-	public AlgGenRegUser() {
+	public Configuration() {
 		algorithms = new ArrayList<>();
 		genotypes = new ArrayList<>();
-		registry = new Registry();
+		registry = new EntryList();
 	}
 
 	/**
@@ -43,8 +43,8 @@ public class AlgGenRegUser {
 	 * @param genotypes given genotypes blocks.
 	 * @param registry given registry.
 	 */
-	public AlgGenRegUser(List<EntryBlock> algorithms, List<List<EntryBlock>> genotypes,
-			Registry registry) {
+	public Configuration(List<EntryBlock> algorithms, List<List<EntryBlock>> genotypes,
+						 EntryList registry) {
 		this.algorithms = algorithms;
 		this.genotypes = genotypes;
 		this.registry = registry;

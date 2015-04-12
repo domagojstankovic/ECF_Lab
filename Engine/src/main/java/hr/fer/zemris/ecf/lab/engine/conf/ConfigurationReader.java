@@ -1,6 +1,6 @@
 package hr.fer.zemris.ecf.lab.engine.conf;
 
-import hr.fer.zemris.ecf.lab.engine.param.AlgGenRegUser;
+import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.param.ParametersList;
 
 import java.io.File;
@@ -12,6 +12,6 @@ public interface ConfigurationReader {
 
     ParametersList readInitial(File file);
 
-    AlgGenRegUser readArchive(File file);
+    Configuration readArchive(File file);
 
 }

@@ -50,7 +50,7 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	 *            parameters file (.xml)
 	 * @return AlgGenReg4Writing class filled with necessary data.
 	 */
-	public AlgGenRegUser readArchive(File file) {
+	public Configuration readArchive(File file) {
 		try {
 			return readingArchive(file);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
@@ -93,7 +93,7 @@ public class XmlConfigurationReader implements ConfigurationReader {
 				break;
 			case "Registry":
 				// System.out.println("r");
-				agrList.registry = new Registry();
+				agrList.registry = new EntryList();
 				registry(algGenReg.item(count), agrList.registry);
 				break;
 			default:
@@ -117,8 +117,8 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	 * @throws javax.xml.parsers.ParserConfigurationException
 	 *             in case of problem.
 	 */
-	private AlgGenRegUser readingArchive(File file) throws SAXException, IOException, ParserConfigurationException {
-		AlgGenRegUser agru = new AlgGenRegUser();
+	private Configuration readingArchive(File file) throws SAXException, IOException, ParserConfigurationException {
+		Configuration agru = new Configuration();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -157,15 +157,15 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	}
 
 	/**
-	 * This method is used to fill the given {@link Registry} with given
+	 * This method is used to fill the given registry with given
 	 * {@link org.w3c.dom.Node}.
 	 * 
 	 * @param item
 	 *            node containing the registry.
 	 * @param registry
-	 *            {@link Registry} class to be filled from node.
+	 *            Registry class to be filled from node.
 	 */
-	private void registry(Node item, Registry registry) {
+	private void registry(Node item, EntryList registry) {
 		NodeList registries = item.getChildNodes();
 
 		for (int i = 0; i < registries.getLength(); i++) {
