@@ -170,5 +170,6 @@ nb-configuration.xml
 *.sql
 *.sqlite
 
-# Application specific
-res/log/**
+# Application specific #
+########################
+res/log/
