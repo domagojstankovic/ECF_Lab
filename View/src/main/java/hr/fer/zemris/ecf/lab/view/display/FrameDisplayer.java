@@ -24,7 +24,7 @@ public class FrameDisplayer implements LogDisplayer {
 	@Override
 	public void displayLog(LogModel log) throws Exception {
 		List<Generation> generations = log.getGenerations();
-		String solution = log.getHallOfFame().get(0).genotypes.get(0).toString();
+		String solution = log.getHallOfFame();
 		int size = generations.size();
 		XYSeries sMinFit = new XYSeries("Min Fit");
 		XYSeries sMaxFit = new XYSeries("Max Fit");
@@ -32,13 +32,13 @@ public class FrameDisplayer implements LogDisplayer {
 		for (int i = 0; i < size; i++) {
 			Generation generation = generations.get(i);
 			if (generation.population != null) {
-				sMinFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.population.minFitness));
-				sMaxFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.population.maxFitness));
-				sAvgFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.population.avgFitness));
+				sMinFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.population.stats.min));
+				sMaxFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.population.stats.max));
+				sAvgFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.population.stats.avg));
 			} else {
-				sMinFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.demes.get(0).minFitness));
-				sMaxFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.demes.get(0).maxFitness));
-				sAvgFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.demes.get(0).avgFitness));
+				sMinFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.demes.get(0).stats.min));
+				sMaxFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.demes.get(0).stats.max));
+				sAvgFit.add(Integer.valueOf(generation.id), Double.valueOf(generation.demes.get(0).stats.avg));
 			}
 		}
 		XYSeriesCollection coll = new XYSeriesCollection();

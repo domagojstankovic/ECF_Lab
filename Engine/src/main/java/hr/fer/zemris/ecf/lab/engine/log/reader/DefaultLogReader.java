@@ -28,7 +28,7 @@ public class DefaultLogReader implements LogReader {
                 return errorState(line, sc);
             }
             if (line.startsWith(GENERATION_PREFIX)) {
-                LogModel log = new LogModel(new ArrayList<>(), new ArrayList<>());
+                LogModel log = new LogModel(new ArrayList<>());
                 generationState(log, line, sc);
                 return log;
             }

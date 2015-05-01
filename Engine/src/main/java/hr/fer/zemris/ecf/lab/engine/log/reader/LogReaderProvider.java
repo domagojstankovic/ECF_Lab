@@ -5,12 +5,12 @@ package hr.fer.zemris.ecf.lab.engine.log.reader;
  */
 public class LogReaderProvider {
 
-    private LogReader reader = null;
+    private static LogReader reader = null;
 
     private LogReaderProvider() {
     }
 
-    public LogReader getReader() {
+    public static LogReader getReader() {
         if (reader == null) {
             reader = new DefaultLogReader();
         }

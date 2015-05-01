@@ -8,18 +8,16 @@ import java.util.List;
  */
 public class LogModel {
 
-	private String error = null;
+	private String error;
 	private List<Generation> generations;
-	private List<Individual> hallOfFame;
+	private String hallOfFame;
 	
 	/**
 	 * Constructor, it initializes generations and hallOfFame to given array lists.
 	 * @param generations generations list
-	 * @param hallOfFame hallOfFame list
 	 */
-	public LogModel(List<Generation> generations, List<Individual> hallOfFame){
+	public LogModel(List<Generation> generations){
 		this.generations = generations;
-		this.hallOfFame = hallOfFame;
 	}
 
 	public LogModel(String error) {
@@ -30,8 +28,12 @@ public class LogModel {
 		return generations;
 	}
 
-	public List<Individual> getHallOfFame() {
+	public String getHallOfFame() {
 		return hallOfFame;
+	}
+
+	public void setHallOfFame(String hallOfFame) {
+		this.hallOfFame = hallOfFame;
 	}
 
 	public void setError(String error) {

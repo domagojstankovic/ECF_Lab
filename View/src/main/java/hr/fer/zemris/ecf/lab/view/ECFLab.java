@@ -1,5 +1,7 @@
 package hr.fer.zemris.ecf.lab.view;
 
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
+import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
 import hr.fer.zemris.ecf.lab.model.info.InfoService;
 import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsProvider;
@@ -346,7 +348,8 @@ public class ECFLab extends JFrame {
 
 		if (retVal == JOptionPane.OK_OPTION) {
 			try {
-				openResultDisplay.displayLog(logPathPanel.getText());
+				LogModel log = LogReaderProvider.getReader().read(new FileInputStream(logPathPanel.getText()));
+				openResultDisplay.displayLog(log);
 			} catch (Exception e) {
 				LoggerProvider.getLogger().log(e);
 				reportError(e.getMessage());
