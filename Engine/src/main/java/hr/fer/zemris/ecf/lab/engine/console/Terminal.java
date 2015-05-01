@@ -12,7 +12,6 @@ public class Terminal implements Console {
     @Override
     public void pardump(String ecfPath, String pardumpPath) {
         try {
-
             Process process = new ProcessBuilder(ecfPath, "-gui", "-pardump", pardumpPath).start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
