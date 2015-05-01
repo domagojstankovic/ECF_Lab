@@ -13,14 +13,12 @@ import hr.fer.zemris.ecf.lab.engine.task.TaskMannager;
  * @version 1.0
  * 
  */
-public class Job implements Subject {
+public class Job {
 
 	public String ecfPath;
-	public String paramsPath;
-	public String logFilePath;
-	public boolean isDone;
+	public String configPath;
 	
-	private Observer observer = null;
+	private JobObserver observer = null;
 
 	/**
 	 * Main constructor, it gets all that is needed for communication to the
@@ -28,45 +26,30 @@ public class Job implements Subject {
 	 * 
 	 * @param ecfPath
 	 *            path to the ECF.
-	 * @param logFilePath
-	 *            path to where the log file will be placed.
-	 * @param paramsPath
+	 * @param configPath
 	 *            path to the parameters that are given to the ECF.
 	 */
-	public Job(String ecfPath, String logFilePath, String paramsPath) {
+	public Job(String ecfPath, String configPath) {
 		this.ecfPath = ecfPath;
-		this.paramsPath = paramsPath;
-		this.logFilePath = logFilePath;
-		this.isDone = false;
+		this.configPath = configPath;
 	}
 
-	/**
-	 * Secondary constructor, used only if path's are needed to be add manually.
-	 */
-	public Job() {
-		isDone = false;
-	}
-
-	@Override
-	public void setObserver(Observer observer) {
+	public void setObserver(JobObserver observer) {
 		this.observer = observer;
 	}
 
-	@Override
-	public void removeObserver() {
-		observer = null;
-	}
-
-	@Override
-	public void finished() throws Exception {
+	public void finished(ProcessOutput output) {
 		if (observer != null) {
-			observer.update(this);
+			observer.jobFinished(this, output);
+			observer = null;
 		}
 	}
 
-	@Override
-	public String getMessage() {
-		return logFilePath;
+	public void failed() {
+		if (observer != null) {
+			observer.jobFailed(this);
+			observer = null;
+		}
 	}
 
 }

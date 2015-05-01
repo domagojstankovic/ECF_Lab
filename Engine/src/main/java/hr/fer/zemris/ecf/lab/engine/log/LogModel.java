@@ -1,0 +1,48 @@
+package hr.fer.zemris.ecf.lab.engine.log;
+
+import java.util.List;
+
+/**
+ * This class is for use in off-line reading <b>only</b>.
+ * For online reading use ArrayList of {@link Generation}.
+ */
+public class LogModel {
+
+	private String error = null;
+	private List<Generation> generations;
+	private List<Individual> hallOfFame;
+	
+	/**
+	 * Constructor, it initializes generations and hallOfFame to given array lists.
+	 * @param generations generations list
+	 * @param hallOfFame hallOfFame list
+	 */
+	public LogModel(List<Generation> generations, List<Individual> hallOfFame){
+		this.generations = generations;
+		this.hallOfFame = hallOfFame;
+	}
+
+	public LogModel(String error) {
+		this.error = error;
+	}
+
+	public List<Generation> getGenerations() {
+		return generations;
+	}
+
+	public List<Individual> getHallOfFame() {
+		return hallOfFame;
+	}
+
+	public void setError(String error) {
+		this.error = error;
+	}
+
+	public String getError() {
+		return error;
+	}
+
+	public boolean errorOccured() {
+		return error != null;
+	}
+}

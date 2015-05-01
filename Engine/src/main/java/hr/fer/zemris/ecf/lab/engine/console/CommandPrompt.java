@@ -18,9 +18,8 @@ public class CommandPrompt implements Console {
              * and doesn't execute Java code till then.
              */
             String controlString = "-gui -pardump";
-//			System.out.println("cmd.exe /c \""+(ecfPath + " " + controlString + " " + paramsPath)+"\"");
             String cmd3 = "\"" + (ecfPath + " " + controlString + " " + pardumpPath) + "\"";
-            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", cmd3); // ispravljeno, parametri se moraju odvojiti, ne mogu se samo slijepiti stringovi
+            ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", cmd3);
             Process process = pb.start();
             process.waitFor();
         } catch (IOException e) {
@@ -33,20 +32,19 @@ public class CommandPrompt implements Console {
 
     @Override
     public void execute(Job job) {
-        String path = job.ecfPath + ">";
-        String errorFilePath = job.logFilePath + ".err";
-        //		String command = job.logFilePath + " " + job.paramsPath;
-        String command = job.logFilePath + " 2> " + errorFilePath + " " + job.paramsPath;
-        Process process;
+        String command = job.ecfPath + " " + job.configPath;
         synchronized (System.out) {
-            System.out.println("cmd.exe /c \"" + path + "" + command + "\"");
+            System.out.println("cmd.exe /c \"" + command + "\"");
         }
         try {
-            String cmd3 = "\"" + path + "" + command + "\"";
-            process = new ProcessBuilder("cmd.exe", "/c", cmd3).start();
+            String cmd3 = "\"" + command + "\"";
+            Process process = new ProcessBuilder("cmd.exe", "/c", cmd3).start();
             process.waitFor();
+            ProcessOutput output = new ProcessOutput(process.getInputStream(), process.getErrorStream());
+            job.finished(output);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            job.failed();
         }
 
     }

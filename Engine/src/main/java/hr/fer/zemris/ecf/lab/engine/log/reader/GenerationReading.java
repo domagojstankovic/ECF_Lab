@@ -1,6 +1,6 @@
 package hr.fer.zemris.ecf.lab.engine.log.reader;
 
-import hr.fer.zemris.ecf.lab.engine.log.LogFile;
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.log.Population;
 import hr.fer.zemris.ecf.lab.engine.log.Deme;
 import hr.fer.zemris.ecf.lab.engine.log.Generation;
@@ -8,7 +8,7 @@ import hr.fer.zemris.ecf.lab.engine.log.Generation;
 import java.util.ArrayList;
 
 /**
- * This class has only one static meted that is used to parse {@link Generation} from one {@link LogFile}.
+ * This class has only one static meted that is used to parse {@link Generation} from one {@link LogModel}.
  * @version 1.0
  *
  */
@@ -39,10 +39,10 @@ public class GenerationReading {
 			else if(line.contains("Deme")){
 				deme.id = Integer.parseInt(line.split("\\:")[1].trim());
 				deme.evaluations = Integer.parseInt(data.get(i+1).split("\\:")[1].trim());
-				deme.maxFitness = Double.parseDouble(data.get(i+3).split("\\:")[1].trim());
-				deme.minFitness = Double.parseDouble(data.get(i+4).split("\\:")[1].trim());
-				deme.avgFitness = Double.parseDouble(data.get(i+5).split("\\:")[1].trim());
-				deme.stdevFitness = Double.parseDouble(data.get(i+6).split("\\:")[1].trim());
+				deme.stats.max = Double.parseDouble(data.get(i+3).split("\\:")[1].trim());
+				deme.stats.min = Double.parseDouble(data.get(i+4).split("\\:")[1].trim());
+				deme.stats.avg = Double.parseDouble(data.get(i+5).split("\\:")[1].trim());
+				deme.stats.stdev = Double.parseDouble(data.get(i+6).split("\\:")[1].trim());
 				gen.demes.add(deme);
 				deme = new Deme();
 				i +=6;
@@ -50,10 +50,10 @@ public class GenerationReading {
 			else if(line.contains("Population")){
 				gen.population = new Population();
 				gen.population.evaluations = Integer.parseInt(data.get(i+1).split("\\:")[1].trim());
-				gen.population.maxFitness = Double.parseDouble(data.get(i+3).split("\\:")[1].trim());
-				gen.population.minFitness = Double.parseDouble(data.get(i+4).split("\\:")[1].trim());
-				gen.population.avgFitness = Double.parseDouble(data.get(i+5).split("\\:")[1].trim());
-				gen.population.stdevFitness = Double.parseDouble(data.get(i+6).split("\\:")[1].trim());
+				gen.population.stats.max = Double.parseDouble(data.get(i+3).split("\\:")[1].trim());
+				gen.population.stats.min = Double.parseDouble(data.get(i+4).split("\\:")[1].trim());
+				gen.population.stats.avg = Double.parseDouble(data.get(i+5).split("\\:")[1].trim());
+				gen.population.stats.stdev = Double.parseDouble(data.get(i+6).split("\\:")[1].trim());
 				break;
 			}
 		}

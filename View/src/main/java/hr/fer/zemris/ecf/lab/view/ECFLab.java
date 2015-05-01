@@ -82,8 +82,8 @@ public class ECFLab extends JFrame {
 	private String ecfPath;
 	private String parDumpPath;
 	private ParametersList parDump;
-	private IResultDisplay resultDisplay;
-	private IResultDisplay openResultDisplay;
+	private LogDisplayer resultDisplay;
+	private LogDisplayer openResultDisplay;
 
 	/**
 	 * Creates a new main frame for ECF Lab.
@@ -135,7 +135,7 @@ public class ECFLab extends JFrame {
 			parDumpPath = SettingsProvider.getSettings().getValue(SettingsKey.DEFAULT_PARAMS_DUMP);
 			setTitle(APP_TITLE + " - " + ecfPath);
 			parDump = callParDump();
-			InfoService.setLastSelectedECFexecutable(ecfPath);
+			InfoService.setLastSelectedPath(ecfPath);
 		}
 	}
 
@@ -346,7 +346,7 @@ public class ECFLab extends JFrame {
 
 		if (retVal == JOptionPane.OK_OPTION) {
 			try {
-				openResultDisplay.displayResult(logPathPanel.getText());
+				openResultDisplay.displayLog(logPathPanel.getText());
 			} catch (Exception e) {
 				LoggerProvider.getLogger().log(e);
 				reportError(e.getMessage());
@@ -401,7 +401,7 @@ public class ECFLab extends JFrame {
 
 	protected void openConf() {
 		try {
-			JFileChooser fc = new JFileChooser(InfoService.getLastSelectedConfPath());
+			JFileChooser fc = new JFileChooser(InfoService.getLastSelectedPath());
 			int retVal = fc.showOpenDialog(this);
 			if (retVal != JFileChooser.APPROVE_OPTION) {
 				return;
@@ -449,7 +449,7 @@ public class ECFLab extends JFrame {
 			}
 
 			ps.getDefinePanel().setParamsPath(absolutePath);
-			InfoService.setLastSelectedConfPath(absolutePath);
+			InfoService.setLastSelectedPath(absolutePath);
 		} catch (Exception e) {
 			String message = e.getMessage();
 			if (message == null) {
@@ -583,7 +583,7 @@ public class ECFLab extends JFrame {
 	/**
 	 * @return Object which main purpose is to display a result of experiment.
 	 */
-	public IResultDisplay getResultDisplay() {
+	public LogDisplayer getResultDisplay() {
 		return resultDisplay;
 	}
 
@@ -603,7 +603,7 @@ public class ECFLab extends JFrame {
 		ConfigurationService.getInstance().setReader(new XmlConfigurationReader());
 		ConfigurationService.getInstance().setWriter(new XmlConfigurationWriter());
 
-		InfoService.setLastSelectedConfPath(new File("").getAbsolutePath());
+		InfoService.setLastSelectedPath(new File("").getAbsolutePath());
 
 		Thread.setDefaultUncaughtExceptionHandler(new EDTExceptionHandler(log));
 		System.setProperty("sun.awt.exception.handler", EDTExceptionHandler.class.getName());

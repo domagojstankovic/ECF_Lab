@@ -1,21 +1,23 @@
 package hr.fer.zemris.ecf.lab.view.display;
 
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
+
 /**
  * Object that can display result.
  * @author Domagoj
  *
  */
-public interface IResultDisplay {
+public interface LogDisplayer {
 
 	/**
 	 * Displays chart in a new frame. Reads results from the log file and then
 	 * displays it.
 	 * 
-	 * @param logFile
-	 *            Path to the log file
+	 * @param log
+	 *            Log model
 	 * @throws Exception
 	 *             If reading log file goes wrong
 	 */
-	public void displayResult(String logFile) throws Exception;
+	void displayLog(LogModel log) throws Exception;
 	
 }

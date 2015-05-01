@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is container for all parameters that are in one individual in one hall of fame in one {@link LogFile}.
+ * This class is container for all parameters that are in one individual in one hall of fame in one {@link LogModel}.
  * All parameters are public and they are to be dealt with manually.
  * It also contains constructor to help a little.
  * @version 1.0

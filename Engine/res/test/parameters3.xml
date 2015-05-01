@@ -1,0 +1,15 @@
+<ECF>
+	<Algorithm>
+		<RouletteWheel>
+		</RouletteWheel>
+	</Algorithm>
+
+	<Genotype>
+		<BitString>
+		</BitString>
+	</Genotype>
+
+	<Registry>
+	</Registry>
+</ECF>
+

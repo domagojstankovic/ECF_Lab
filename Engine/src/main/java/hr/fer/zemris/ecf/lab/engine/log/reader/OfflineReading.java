@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -16,7 +17,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import hr.fer.zemris.ecf.lab.engine.log.Generation;
 import hr.fer.zemris.ecf.lab.engine.log.Individual;
-import hr.fer.zemris.ecf.lab.engine.log.LogFile;
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.log.genotypes.GenotypeReader;
 import hr.fer.zemris.ecf.lab.engine.log.genotypes.InitialGenotype;
 import org.w3c.dom.Document;
@@ -33,43 +34,26 @@ import org.xml.sax.SAXException;
  *
  */
 public class OfflineReading {
-	
-	private ArrayList<Generation> generations;
-	private ArrayList<Individual> hallOfFame;
-	
-	/**
-	 * Constructor, it initializes the {@link Generation} list and {@link Individual} list to new array lists.
-	 */
-	public OfflineReading(){
-		generations = new ArrayList<>();
-		hallOfFame = new ArrayList<>();
-	}
-	
-	/**
-	 * This is gather for the {@link LogFile} produced from {@link Generation} and {@link Individual} list stored in this class.
-	 * @return new logFile class produced form {@link Generation} and {@link Individual} list stored in this class.
-	 */
-	public LogFile getLogFile(){
-		return new LogFile(generations,hallOfFame);
-	}
-	
 	/**
 	 * User of this class only needs to know to give it the path to the log file and the log file will be "magically" parsed into
 	 * {@link Generation} and {@link Individual} lists stored in this class.
 	 * @param file
 	 * @throws Exception If reading goes wrong
 	 */
-	public void read(String file) throws Exception {
-		Scanner sc = null;
+	public LogModel read(String file) throws Exception {
+		Scanner sc;
 		try {
 			sc = new Scanner(new File(file));
 		} catch (FileNotFoundException e) {
 			System.err.println("Can't find \"log\" file.");
 			throw e;
 		}
+
+		List<Generation> generations;
+		List<Individual> hallOfFame;
 		try {
-			reading(sc);
-			createHallOfFame(sc);
+			generations = reading(sc);
+			hallOfFame = createHallOfFame(sc);
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			sc.close();
 			String errPath = file + ".err";
@@ -94,6 +78,7 @@ public class OfflineReading {
 			}
 		}
 		sc.close();
+		return new LogModel(generations, hallOfFame);
 	}
 	
 	/**
@@ -103,7 +88,7 @@ public class OfflineReading {
 	 * @throws org.xml.sax.SAXException If error occurs while reading HallOfFame from log file
 	 * @throws javax.xml.parsers.ParserConfigurationException If error occurs while reading HallOfFame from log file
 	 */
-	private void createHallOfFame(Scanner sc) throws ParserConfigurationException, SAXException, IOException {
+	private List<Individual> createHallOfFame(Scanner sc) throws ParserConfigurationException, SAXException, IOException {
 		StringBuilder sb = new StringBuilder();
 		String line;
 		while(sc.hasNextLine()) {
@@ -122,8 +107,9 @@ public class OfflineReading {
 			}			
 		}
 		if(sb.length() > 0) {
-			parseHallOfFame(sb.toString());
+			return parseHallOfFame(sb.toString());
 		}
+		return new ArrayList<>();
 	}
 	
 	/**
@@ -131,7 +117,7 @@ public class OfflineReading {
 	 * This meted also gathers parsed form {@link GenerationReading} and puts them into generations array list.
 	 * @param sc scanner for the log file
 	 */
-	private void reading(Scanner sc) {
+	private List<Generation> reading(Scanner sc) {
 		String line = "";
 		//Getting to first generation
 		while(sc.hasNextLine() && !line.contains("Generation")){
@@ -140,13 +126,13 @@ public class OfflineReading {
 		
 		ArrayList<String> gen = new ArrayList<>();
 		gen.add(line);
+		ArrayList<Generation> generations = new ArrayList<>();
 		
 		while(sc.hasNextLine()){
 			line = sc.nextLine();
 			if(line.contains("Generation")){
 				generations.add(GenerationReading.parse(gen));
 				gen = new ArrayList<>();
-				
 			}
 			if(line.contains("Best of run")){
 				generations.add(GenerationReading.parse(gen));
@@ -155,7 +141,8 @@ public class OfflineReading {
 			}
 			gen.add(line);
 		}
-		
+
+		return generations;
 	}
 
 	/**
@@ -165,7 +152,7 @@ public class OfflineReading {
 	 * @throws org.xml.sax.SAXException if problems.
 	 * @throws java.io.IOException if problems.
 	 */
-	private void parseHallOfFame(String xml) throws ParserConfigurationException, SAXException, IOException {
+	private List<Individual> parseHallOfFame(String xml) throws ParserConfigurationException, SAXException, IOException {
 	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	    DocumentBuilder builder = factory.newDocumentBuilder();
 	    InputSource is = new InputSource(new StringReader(xml));
@@ -177,7 +164,8 @@ public class OfflineReading {
 //		System.out.println("Hof  =" +((Element) hof).getAttribute("size"));
 	    
 		NodeList individualList = hof.getChildNodes();
-		
+		ArrayList<Individual> hallOfFame = new ArrayList<>();
+
 		for(int i=0; i<individualList.getLength(); i++){
 			Node indiv = individualList.item(i);
 			Individual ind = new Individual();
@@ -189,7 +177,8 @@ public class OfflineReading {
 				hallOfFame.add(ind);
 			}
 		}
-		
+
+		return hallOfFame;
 	}
 
 	/**

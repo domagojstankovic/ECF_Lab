@@ -1,12 +1,12 @@
 package hr.fer.zemris.ecf.lab.engine.log.genotypes;
 
 import hr.fer.zemris.ecf.lab.engine.log.Individual;
-import hr.fer.zemris.ecf.lab.engine.log.LogFile;
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 
 import java.util.List;
 
 /**
- * This class is a representation of one genotype's solution form one {@link Individual} from one {@link LogFile}.
+ * This class is a representation of one genotype's solution form one {@link Individual} from one {@link LogModel}.
  * This is an abstract class that is extended by classes that implement specific genotype type.
  * <b>Classes that extend this class has to have the same name as the the name of some genotype and they have to be in <code>hr.fer.zemris.ecf.log.genotypes</code> package.</b>
  * For example: in ECF there is a genotype named BitString and in here there is <code>hr.fer.zemris.ecf.log.genotypes.BitString.java</code> class.

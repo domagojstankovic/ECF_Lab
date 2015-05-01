@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.view.chart.ChartFrame;
 import hr.fer.zemris.ecf.lab.view.chart.LineChartPanel;
 import hr.fer.zemris.ecf.lab.engine.log.Generation;
-import hr.fer.zemris.ecf.lab.engine.log.reader.OfflineReading;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -19,14 +19,12 @@ import org.jfree.data.xy.XYSeriesCollection;
  * @author Domagoj
  *
  */
-public class FrameDisplayer implements IResultDisplay {
+public class FrameDisplayer implements LogDisplayer {
 
 	@Override
-	public void displayResult(String logFile) throws Exception {
-		OfflineReading off = new OfflineReading();
-		off.read(logFile);
-		ArrayList<Generation> generations = off.getLogFile().generations;
-		String solution = off.getLogFile().hallOfFame.get(0).genotypes.get(0).toString();
+	public void displayLog(LogModel log) throws Exception {
+		List<Generation> generations = log.getGenerations();
+		String solution = log.getHallOfFame().get(0).genotypes.get(0).toString();
 		int size = generations.size();
 		XYSeries sMinFit = new XYSeries("Min Fit");
 		XYSeries sMaxFit = new XYSeries("Max Fit");
@@ -51,7 +49,7 @@ public class FrameDisplayer implements IResultDisplay {
 		colors.add(Color.BLACK);
 		colors.add(Color.RED);
 		colors.add(Color.BLUE);
-		String chartTitle = logFile;
+		String chartTitle = "Log";
 		String xAxisLabel = "Generation";
 		String yAxisLabel = "Fitness";
 		LineChartPanel lineChart = new LineChartPanel(coll, colors, chartTitle, xAxisLabel, yAxisLabel, true, false);

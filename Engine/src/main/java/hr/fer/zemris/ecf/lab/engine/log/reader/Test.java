@@ -1,28 +1,21 @@
 package hr.fer.zemris.ecf.lab.engine.log.reader;
 
 import hr.fer.zemris.ecf.lab.engine.log.Generation;
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Test {
 	
 	public static void main(String[] args) {
-		//OnlineReading or = new OnlineReading();
 		OfflineReading off = new OfflineReading();
 		try {
-			off.read("test/log.txt");
+			LogModel logModel = off.read("test/log.txt");
+			List<Generation> gen = logModel.getGenerations();
+			System.out.println(gen.get(gen.size()-1).population.avgFitness);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		ArrayList<Generation> gen = off.getLogFile().generations;
-		System.out.println(gen.get(gen.size()-1).population.avgFitness);
-		
-		//STUDY CAREFOULY THE NEXT LINE :)
-//		List<Integer> li = off.getLogFile().hallOfFame.get(0).genotypes.get(0).getValues();
-//		
-//		for(int i : li){
-//			System.out.print(i+" ");
-//		}
 	}
 
 }

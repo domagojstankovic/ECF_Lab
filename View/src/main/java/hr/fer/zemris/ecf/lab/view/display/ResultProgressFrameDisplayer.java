@@ -1,12 +1,9 @@
 package hr.fer.zemris.ecf.lab.view.display;
 
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
-import hr.fer.zemris.ecf.lab.view.Utils;
-import hr.fer.zemris.ecf.lab.model.logger.Logger;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Scanner;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -14,12 +11,12 @@ import javax.swing.JOptionPane;
 
 /**
  * Object that handles incoming requests for result display. Method
- * displayResult is usually invoked when ECF Lab has generated a new log file.
+ * displayLog is usually invoked when ECF Lab has generated a new log file.
  * 
  * @author Domagoj
  * 
  */
-public class ResultProgressFrameDisplayer implements IResultDisplay {
+public class ResultProgressFrameDisplayer implements LogDisplayer {
 
 	private ResultProgressFrame frame = null;
 
@@ -28,28 +25,15 @@ public class ResultProgressFrameDisplayer implements IResultDisplay {
 	}
 
 	@Override
-	public void displayResult(String logFile) throws Exception {
+	public void displayLog(LogModel log) throws Exception {
 		if (frame == null) {
 			frame = ResultProgressFrame.getInstance();
 		}
-		addComp(logFile);
-		File f = new File(logFile + Utils.LOG_EXT);
-		if (f.exists()) {
-			Scanner sc = new Scanner(f);
-			String line1 = sc.nextLine();
-			String path = sc.nextLine();
-			sc.close();
-			int num = Integer.parseInt(line1);
-			int len = String.valueOf(num).length();
-			for (int i = 1; i <= num; i++) {
-				addComp(Utils.addBeforeExtension(path, i, len));
-			}
-			f.delete();
-		}
+		addComp(log);
 		frame.setVisible(true);
 	}
 
-	private void addComp(final String logFile) {
+	private void addComp(final LogModel log) {
 		JButton openButton = new JButton(new AbstractAction() {
 
 			private static final long serialVersionUID = 1L;
@@ -57,7 +41,7 @@ public class ResultProgressFrameDisplayer implements IResultDisplay {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					new FrameDisplayer().displayResult(logFile);
+					new FrameDisplayer().displayLog(log);
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(frame, e1.getMessage(), "An error occured while reading log file",
 							JOptionPane.WARNING_MESSAGE);
@@ -68,7 +52,7 @@ public class ResultProgressFrameDisplayer implements IResultDisplay {
 		});
 		openButton.setText("Open");
 		JButton closeButton = new JButton();
-		final OpenResultPanel comp = new OpenResultPanel(logFile, openButton, closeButton);
+		final OpenResultPanel comp = new OpenResultPanel("TODO", openButton, closeButton);
 		closeButton.setAction(new AbstractAction() {
 
 			private static final long serialVersionUID = 1L;
