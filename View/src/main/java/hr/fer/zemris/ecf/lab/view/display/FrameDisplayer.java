@@ -22,7 +22,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class FrameDisplayer implements LogDisplayer {
 
 	@Override
-	public void displayLog(LogModel log) throws Exception {
+	public void displayLog(LogModel log) {
 		List<Generation> generations = log.getGenerations();
 		String solution = log.getHallOfFame();
 		int size = generations.size();

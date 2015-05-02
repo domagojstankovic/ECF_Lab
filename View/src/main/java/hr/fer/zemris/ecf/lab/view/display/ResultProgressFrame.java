@@ -1,12 +1,15 @@
 package hr.fer.zemris.ecf.lab.view.display;
 
-import java.awt.Component;
+import hr.fer.zemris.ecf.lab.engine.console.Job;
+import hr.fer.zemris.ecf.lab.engine.console.JobObserver;
+import hr.fer.zemris.ecf.lab.engine.console.ProcessOutput;
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
+import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
 
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+
+import javax.swing.*;
 
 /**
  * Frame that displays list of all results that have been generated. This frame
@@ -15,14 +18,13 @@ import javax.swing.WindowConstants;
  * @author Domagoj
  * 
  */
-public class ResultProgressFrame extends JFrame {
+public class ResultProgressFrame extends JFrame implements LogDisplayer, JobObserver {
 
 	private static final long serialVersionUID = 1L;
 
-	private static ResultProgressFrame instance;
 	private JPanel pan = null;
 
-	private ResultProgressFrame() {
+	public ResultProgressFrame() {
 		super();
 		setTitle("Results");
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -31,19 +33,6 @@ public class ResultProgressFrame extends JFrame {
 		pan = new JPanel();
 		pan.setLayout(new BoxLayout(pan, BoxLayout.Y_AXIS));
 		getContentPane().add(new JScrollPane(pan));
-	}
-
-	public static ResultProgressFrame getInstance() {
-		if (instance == null) {
-			instance = new ResultProgressFrame();
-		}
-		return instance;
-	}
-
-	public static void disposeInstance() {
-		if (instance != null) {
-			instance.dispose();
-		}
 	}
 
 	@Override
@@ -58,4 +47,40 @@ public class ResultProgressFrame extends JFrame {
 		getContentPane().repaint();
 	}
 
+	@Override
+	public void displayLog(LogModel log) {
+		addComp(log);
+		setVisible(true);
+	}
+
+	private void addComp(final LogModel log) {
+		JButton btn = new JButton(new AbstractAction() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					new FrameDisplayer().displayLog(log);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(ResultProgressFrame.this, e1.getMessage(), "An error occured while reading log file",
+							JOptionPane.WARNING_MESSAGE);
+					e1.printStackTrace();
+					LoggerProvider.getLogger().log(e1);
+				}
+			}
+		});
+		btn.setText("TODO");
+		add(btn);
+	}
+
+	@Override
+	public void jobFinished(Job job, ProcessOutput output) {
+
+	}
+
+	@Override
+	public void jobFailed(Job job) {
+
+	}
 }

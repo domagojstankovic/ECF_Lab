@@ -84,7 +84,6 @@ public class ECFLab extends JFrame {
 	private String ecfPath;
 	private String parDumpPath;
 	private ParametersList parDump;
-	private LogDisplayer resultDisplay;
 	private LogDisplayer openResultDisplay;
 
 	/**
@@ -114,7 +113,6 @@ public class ECFLab extends JFrame {
 			add(tabbedPane, BorderLayout.CENTER);
 
 			openResultDisplay = new FrameDisplayer();
-			resultDisplay = new ResultProgressFrameDisplayer();
 			
 			setVisible(true);
 			chooseECFExe();
@@ -281,7 +279,8 @@ public class ECFLab extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ResultProgressFrame.getInstance().setVisible(true);
+				ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
+				ps.getProgressFrame().setVisible(true);
 			}
 		};
 		actions.put("ResultsFrame", action);
@@ -542,7 +541,6 @@ public class ECFLab extends JFrame {
 	}
 
 	private void exitConfirmed() {
-		ResultProgressFrame.disposeInstance();
 		dispose();
 	}
 
@@ -581,13 +579,6 @@ public class ECFLab extends JFrame {
 	 */
 	public ParametersList getParDump() {
 		return parDump;
-	}
-	
-	/**
-	 * @return Object which main purpose is to display a result of experiment.
-	 */
-	public LogDisplayer getResultDisplay() {
-		return resultDisplay;
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.engine.console.ProcessOutput;
+import hr.fer.zemris.ecf.lab.engine.log.LogModel;
+import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
 import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
 import hr.fer.zemris.ecf.lab.view.ECFLab;
 import hr.fer.zemris.ecf.lab.view.Utils;
@@ -9,6 +11,8 @@ import hr.fer.zemris.ecf.lab.engine.console.JobObserver;
 import hr.fer.zemris.ecf.lab.engine.console.Job;
 import hr.fer.zemris.ecf.lab.engine.param.*;
 import hr.fer.zemris.ecf.lab.engine.task.TaskMannager;
+import hr.fer.zemris.ecf.lab.view.display.LogDisplayer;
+import hr.fer.zemris.ecf.lab.view.display.ResultProgressFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -20,13 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Panel that displays available parameters for the selected ECF executable
@@ -49,6 +47,7 @@ public class ParametersSelection extends JPanel implements JobObserver {
     private String ecfPath;
     private DefinePanel definePanel;
     private String lastLogFilePath = null;
+    private ResultProgressFrame progressFrame = null;
 
     /**
      * Creates new {@link ParametersSelection} object for choosing ECF
@@ -261,17 +260,12 @@ public class ParametersSelection extends JPanel implements JobObserver {
 
     @Override
     public void jobFinished(Job job, ProcessOutput output) {
-        // String logFile = subject.getLogFilePath();
-        // parent.getResultDisplay().displayLog(logFile);
-        // subject.removeObserver();
-
         try {
             SwingUtilities.invokeAndWait(() -> {
                 InputStream is = output.getStdout();
                 try {
-                    // TODO
-
-//                    parent.getResultDisplay().displayLog(logFile);
+                    LogModel log = LogReaderProvider.getReader().read(is);
+                    getProgressFrame().displayLog(log);
                 } catch (Exception e) {
                     LoggerProvider.getLogger().log(e);
                     parent.reportError(e.getMessage());
@@ -306,7 +300,6 @@ public class ParametersSelection extends JPanel implements JobObserver {
             add(new JSeparator(JSeparator.VERTICAL));
             add(regList);
         }
-
     }
 
     /**
@@ -325,4 +318,10 @@ public class ParametersSelection extends JPanel implements JobObserver {
         return lastLogFilePath;
     }
 
+    public ResultProgressFrame getProgressFrame() {
+        if (progressFrame == null) {
+            progressFrame = new ResultProgressFrame();
+        }
+        return progressFrame;
+    }
 }

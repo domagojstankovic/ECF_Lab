@@ -23,10 +23,16 @@ public class DefaultLogReaderTest {
                 "\t\t<BitString size=\"10\">1111111111</BitString>\n" +
                 "\t</Individual>\n" +
                 "</HallOfFame>\n\n"));
+
+        assertTrue("Generations num error", log.getGenerations().size() == 31);
         Generation gen0 = log.getGenerations().get(0);
         assertTrue("Generation id bug", gen0.id == 0);
         assertTrue("Demes size bug", gen0.demes.size() == 5);
         assertTrue("Elapsed time bug", gen0.elapsedTime == 0);
         assertTrue("5th deme min error", Math.abs(gen0.demes.get(4).stats.min - 2) < 1e-9);
+        Generation gen30 = log.getGenerations().get(30);
+        assertTrue("Generation 30 id", gen30.id == 30);
+        assertTrue("Generation 30 evaluations error", gen30.population.evaluations == 2733);
+        assertTrue("Generation 30 population max error", Math.abs(gen30.population.stats.max - 10) < 1e-9);
     }
 }
