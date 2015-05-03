@@ -3,6 +3,7 @@ package hr.fer.zemris.ecf.lab.view.layout;
 import hr.fer.zemris.ecf.lab.engine.console.ProcessOutput;
 import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
+import hr.fer.zemris.ecf.lab.model.info.InfoService;
 import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
 import hr.fer.zemris.ecf.lab.view.ECFLab;
 import hr.fer.zemris.ecf.lab.engine.console.JobObserver;
@@ -33,11 +34,9 @@ public class ParametersSelection extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    private ECFLab parent;
     private EntryBlockSelection<EntryBlock> algSel;
     private EntryBlockSelection<EntryBlock> genSel;
     private EntryListPanel regList;
-    private String ecfPath;
     private DefinePanel definePanel;
     private String lastLogFilePath = null;
     private ResultProgressFrame progressFrame = null;
@@ -46,18 +45,13 @@ public class ParametersSelection extends JPanel {
      * Creates new {@link ParametersSelection} object for choosing ECF
      * parameters.
      *
-     * @param parent {@link ECFLab} frame that displays this panel
+     * @param params List of available parameters.
      */
-    public ParametersSelection(ECFLab parent) {
+    public ParametersSelection(ParametersList params) {
         super(new BorderLayout());
-        this.parent = parent;
-        ecfPath = parent.getEcfPath();
-        if (ecfPath == null) {
-            throw new NullPointerException("ECF executable file undefined!");
-        }
-        algSel = new EntryBlockSelection<>(new DropDownPanel<>(parent.getParDump().algorithms));
-        genSel = new EntryBlockSelection<>(new DropDownPanel<>(parent.getParDump().genotypes));
-        regList = EntryListPanel.getComponent(parent.getParDump().registry.getEntryList());
+        algSel = new EntryBlockSelection<>(new DropDownPanel<>(params.algorithms));
+        genSel = new EntryBlockSelection<>(new DropDownPanel<>(params.genotypes));
+        regList = EntryListPanel.getComponent(params.registry.getEntryList());
         String file = new File("").getAbsolutePath();
         String log = file;
         add(new TempPanel(algSel, genSel, new JScrollPane(regList)), BorderLayout.CENTER);
@@ -83,8 +77,10 @@ public class ParametersSelection extends JPanel {
      */
     protected void clicked() {
         Configuration conf = getParameters();
+        String ecfPath = InfoService.getEcfPath();
         String confPath = definePanel.getParamsPath();
         int threads = definePanel.getThreadsCount();
+        getProgressFrame().runExperiment(conf, ecfPath, confPath, threads);
     }
 
     /**

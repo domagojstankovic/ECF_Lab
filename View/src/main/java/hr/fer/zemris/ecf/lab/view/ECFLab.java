@@ -44,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +82,6 @@ public class ECFLab extends JFrame {
 	private JMenuBar menuBar = new JMenuBar();
 	private JTabbedPane tabbedPane;
 	private JToolBar toolbar;
-	private String ecfPath;
 	private String parDumpPath;
 	private ParametersList parDump;
 	private LogDisplayer openResultDisplay;
@@ -131,7 +131,8 @@ public class ECFLab extends JFrame {
 				JOptionPane.OK_CANCEL_OPTION);
 
 		if (retVal == JOptionPane.OK_OPTION) {
-			ecfPath = ecfExePanel.getText();
+			String ecfPath = ecfExePanel.getText();
+			InfoService.setEcfPath(ecfPath);
 			parDumpPath = SettingsProvider.getSettings().getValue(SettingsKey.DEFAULT_PARAMS_DUMP);
 			setTitle(APP_TITLE + " - " + ecfPath);
 			parDump = callParDump();
@@ -413,6 +414,8 @@ public class ECFLab extends JFrame {
 			Configuration agru = ConfigurationService.getInstance().getReader().readArchive(file);
 			ParametersSelection ps = newTab(file.getAbsolutePath());
 
+			List<String> unavailable = new LinkedList<>();
+
 			List<EntryBlock> algs = agru.algorithms;
 			for (EntryBlock alg : algs) {
 				List<Entry> entries = alg.getEntryList();
@@ -420,13 +423,18 @@ public class ECFLab extends JFrame {
 				EntryListPanel enp = ps.getAlgSel().getSelectedEntryList();
 				for (Entry entry : entries) {
 					EntryFieldPanel efp = enp.getEntryField(entry.key);
-					efp.setSelected(true);
-					efp.setText(entry.value);
+					if (efp == null) {
+						unavailable.add(entry.key);
+					} else {
+						efp.setSelected(true);
+						efp.setText(entry.value);
+					}
 				}
 				EntryBlockSelection<EntryBlock> algSel = ps.getAlgSel();
 				algSel.add();
 			}
 
+			// TODO refactor this, code duplication
 			List<EntryBlock> gens = agru.genotypes.get(0);
 			for (EntryBlock gen : gens) {
 				List<Entry> entries = gen.getEntryList();
@@ -434,8 +442,12 @@ public class ECFLab extends JFrame {
 				EntryListPanel enp = ps.getGenSel().getSelectedEntryList();
 				for (Entry entry : entries) {
 					EntryFieldPanel efp = enp.getEntryField(entry.key);
-					efp.setSelected(true);
-					efp.setText(entry.value);
+					if (efp == null) {
+						unavailable.add(entry.key);
+					} else {
+						efp.setSelected(true);
+						efp.setText(entry.value);
+					}
 				}
 				EntryBlockSelection<EntryBlock> genSel = ps.getGenSel();
 				genSel.add();
@@ -446,12 +458,20 @@ public class ECFLab extends JFrame {
 			EntryListPanel enp = ps.getRegList();
 			for (Entry entry : entries) {
 				EntryFieldPanel efp = enp.getEntryField(entry.key);
-				efp.setSelected(true);
-				efp.setText(entry.value);
+				if (efp == null) {
+					unavailable.add(entry.key);
+				} else {
+					efp.setSelected(true);
+					efp.setText(entry.value);
+				}
 			}
 
 			ps.getDefinePanel().setParamsPath(absolutePath);
 			InfoService.setLastSelectedPath(absolutePath);
+			if (!unavailable.isEmpty()) {
+				String text = "Unavailable entries: " + unavailable.toString();
+				reportError(text);
+			}
 		} catch (Exception e) {
 			String message = e.getMessage();
 			if (message == null) {
@@ -471,7 +491,7 @@ public class ECFLab extends JFrame {
 	 * @return Created {@link ParametersSelection} panel
 	 */
 	protected ParametersSelection newTab(String tabName) {
-		ParametersSelection parSel = new ParametersSelection(this);
+		ParametersSelection parSel = new ParametersSelection(getParDump());
 		tabbedPane.add(tabName, parSel);
 		tabbedPane.setSelectedIndex(tabbedPane.getTabCount() - 1);
 		return parSel;
@@ -484,6 +504,7 @@ public class ECFLab extends JFrame {
 	 */
 	protected ParametersList callParDump() {
 		TaskMannager tm = new TaskMannager();
+		String ecfPath = InfoService.getEcfPath();
 		return tm.getInitialECFparams(ecfPath, parDumpPath);
 	}
 
@@ -551,15 +572,6 @@ public class ECFLab extends JFrame {
 	 */
 	public Map<String, Action> getActions() {
 		return actions;
-	}
-
-	/**
-	 * Current ECF executable file path.
-	 * 
-	 * @return ECF exe path
-	 */
-	public String getEcfPath() {
-		return ecfPath;
 	}
 
 	/**
