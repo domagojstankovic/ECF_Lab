@@ -29,6 +29,7 @@ public class Terminal implements Console {
             System.out.println(programPath + " " + args);
         }
         try {
+            job.started();
             Process process = new ProcessBuilder(programPath, args).start();
             process.waitFor();
             ProcessOutput output = new ProcessOutput(process.getInputStream(), process.getErrorStream());

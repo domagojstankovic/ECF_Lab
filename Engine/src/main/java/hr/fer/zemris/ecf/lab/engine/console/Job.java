@@ -38,6 +38,12 @@ public class Job {
 		this.observer = observer;
 	}
 
+	public void started() {
+		if (observer != null) {
+			observer.jobStarted(this);
+		}
+	}
+
 	public void finished(ProcessOutput output) {
 		if (observer != null) {
 			observer.jobFinished(this, output);

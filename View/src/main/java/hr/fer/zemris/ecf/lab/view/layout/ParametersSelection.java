@@ -5,20 +5,15 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
 import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
 import hr.fer.zemris.ecf.lab.view.ECFLab;
-import hr.fer.zemris.ecf.lab.view.Utils;
-import hr.fer.zemris.ecf.lab.engine.conf.ConfigurationService;
 import hr.fer.zemris.ecf.lab.engine.console.JobObserver;
 import hr.fer.zemris.ecf.lab.engine.console.Job;
 import hr.fer.zemris.ecf.lab.engine.param.*;
-import hr.fer.zemris.ecf.lab.engine.task.TaskMannager;
-import hr.fer.zemris.ecf.lab.view.display.LogDisplayer;
 import hr.fer.zemris.ecf.lab.view.display.ResultProgressFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -34,11 +29,9 @@ import javax.swing.*;
  * @author Domagoj Stanković
  * @version 1.0
  */
-public class ParametersSelection extends JPanel implements JobObserver {
+public class ParametersSelection extends JPanel {
 
     private static final long serialVersionUID = 1L;
-
-    private static final boolean DAEMON = false;
 
     private ECFLab parent;
     private EntryBlockSelection<EntryBlock> algSel;
@@ -89,84 +82,9 @@ public class ParametersSelection extends JPanel implements JobObserver {
      * are written to the log file under the specified path.
      */
     protected void clicked() {
-        try {
-            Configuration temp = getParameters();
-            String file = definePanel.getParamsPath();
-            String log = definePanel.getLogPath();
-            lastLogFilePath = log;
-            int pn = definePanel.getThreadsCount();
-            boolean change = false;
-            int repeats = 1;
-            List<Entry> list = temp.registry.getEntryList();
-            Entry e = Utils.findEntry(list, "batch.repeats");
-            if (pn > 1) {
-                if (e != null) {
-                    repeats = Integer.parseInt(e.value);
-                    if (repeats > 1) {
-                        // N repeats, N threads -> separate repeats in N jobs (1 repeat per job)
-                        e.value = "1";
-                        change = true;
-                    } else {
-                        // 1 job (1 repeat), N threads -> change to 1 thread
-                        pn = 1;
-                    }
-                } else {
-                    // 1 job, N threads -> change to 1 thread
-                    pn = 1;
-                }
-            } else {
-                if (e != null) {
-                    repeats = Integer.parseInt(e.value);
-                    if (repeats > 1) {
-                        Entry l = Utils.findEntry(list, "log.filename");
-                        if (l != null) {
-                            String value = l.value;
-                            FileWriter fw = new FileWriter(log + Utils.LOG_EXT);
-                            fw.write(repeats + "\n");
-                            fw.write(value);
-                            fw.close();
-                        }
-                    }
-                }
-            }
-            ConfigurationService.getInstance().getWriter().write(new File(file), temp);
-            final List<Job> jobs;
-            if (change) {
-                jobs = new ArrayList<>(repeats);
-                for (int i = 0; i < repeats; i++) {
-                    Job job = new Job(ecfPath, file);
-                    job.setObserver(this);
-                    jobs.add(job);
-                }
-            } else {
-                jobs = new ArrayList<>(1);
-                Job job = new Job(ecfPath, file);
-                job.setObserver(this);
-                jobs.add(job);
-            }
-            final int tCount = pn;
-            Thread t = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    TaskMannager tm = new TaskMannager();
-                    try {
-                        tm.startTasks(jobs, tCount);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            t.setDaemon(DAEMON);
-            t.start();
-        } catch (Exception e) {
-            String message = e.getMessage();
-            if (message.startsWith("java.lang.Exception: ")) {
-                message = message.substring(21);
-            }
-            parent.reportError(message);
-            LoggerProvider.getLogger().log(e);
-        }
+        Configuration conf = getParameters();
+        String confPath = definePanel.getParamsPath();
+        int threads = definePanel.getThreadsCount();
     }
 
     /**
@@ -256,28 +174,6 @@ public class ParametersSelection extends JPanel implements JobObserver {
      */
     public DefinePanel getDefinePanel() {
         return definePanel;
-    }
-
-    @Override
-    public void jobFinished(Job job, ProcessOutput output) {
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                InputStream is = output.getStdout();
-                try {
-                    LogModel log = LogReaderProvider.getReader().read(is);
-                    getProgressFrame().displayLog(log);
-                } catch (Exception e) {
-                    LoggerProvider.getLogger().log(e);
-                    parent.reportError(e.getMessage());
-                }
-            });
-        } catch (InterruptedException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void jobFailed(Job job) {
     }
 
     /**

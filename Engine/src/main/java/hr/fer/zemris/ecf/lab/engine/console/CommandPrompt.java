@@ -37,6 +37,7 @@ public class CommandPrompt implements Console {
             System.out.println("cmd.exe /c \"" + command + "\"");
         }
         try {
+            job.started();
             String cmd3 = "\"" + command + "\"";
             Process process = new ProcessBuilder("cmd.exe", "/c", cmd3).start();
             process.waitFor();

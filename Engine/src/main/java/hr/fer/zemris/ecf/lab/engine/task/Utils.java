@@ -1,4 +1,4 @@
-package hr.fer.zemris.ecf.lab.view;
+package hr.fer.zemris.ecf.lab.engine.task;
 
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 
@@ -10,8 +10,6 @@ import java.util.List;
  *
  */
 public class Utils {
-
-	public static final String LOG_EXT = ".logext";
 
 	public static String addBeforeExtension(String dest, String src) {
 		int dotIndex = dest.lastIndexOf(".");
