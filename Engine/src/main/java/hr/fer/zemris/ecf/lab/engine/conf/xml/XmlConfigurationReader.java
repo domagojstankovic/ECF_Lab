@@ -73,7 +73,7 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	 *             in case of problem.
 	 */
 	private ParametersList readingInitial(File file) throws SAXException, IOException, ParserConfigurationException {
-		ParametersList agrList = new ParametersList();
+		ParametersList paramsList = new ParametersList();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -85,23 +85,23 @@ public class XmlConfigurationReader implements ConfigurationReader {
 			switch (algGenReg.item(count).getNodeName()) {
 			case "Algorithm":
 				// System.out.println("a");
-				algorithm(algGenReg.item(count), agrList.algorithms);
+				algorithm(algGenReg.item(count), paramsList.algorithms);
 				break;
 			case "Genotype":
 				// System.out.println("g");
-				genotype(algGenReg.item(count), agrList.genotypes);
+				genotype(algGenReg.item(count), paramsList.genotypes);
 				break;
 			case "Registry":
 				// System.out.println("r");
-				agrList.registry = new EntryList();
-				registry(algGenReg.item(count), agrList.registry);
+				paramsList.registry = new EntryList();
+				registry(algGenReg.item(count), paramsList.registry);
 				break;
 			default:
 				// No default, for your own good don't write here.
 				break;
 			}
 		}
-		return agrList;
+		return paramsList;
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class XmlConfigurationReader implements ConfigurationReader {
 	 *             in case of problem.
 	 */
 	private Configuration readingArchive(File file) throws SAXException, IOException, ParserConfigurationException {
-		Configuration agru = new Configuration();
+		Configuration conf = new Configuration();
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -128,32 +128,32 @@ public class XmlConfigurationReader implements ConfigurationReader {
 		Node comment = ecf.item(0);
 		Node tempNode;
 		if (comment instanceof Comment) {
-			agru.userComment = comment.getNodeValue();
+			conf.userComment = comment.getNodeValue();
 			tempNode = ecf.item(1);
 		} else {
-			agru.userComment = agru.getUserComment();
+			conf.userComment = conf.getUserComment();
 			tempNode = ecf.item(0);
 		}
 
 		NodeList algGenReg = tempNode.getChildNodes();
 		ArrayList<EntryBlock> genList = new ArrayList<>();
-		agru.genotypes.add(genList);
+		conf.genotypes.add(genList);
 		for (int count = 0; count < algGenReg.getLength(); count++) {
 			switch (algGenReg.item(count).getNodeName()) {
 			case "Algorithm":
-				algorithm(algGenReg.item(count), agru.algorithms);
+				algorithm(algGenReg.item(count), conf.algorithms);
 				break;
 			case "Genotype":
 				genotype(algGenReg.item(count), genList);
 				break;
 			case "Registry":
-				registry(algGenReg.item(count), agru.registry);
+				registry(algGenReg.item(count), conf.registry);
 				break;
 			default:
 				break;
 			}
 		}
-		return agru;
+		return conf;
 	}
 
 	/**

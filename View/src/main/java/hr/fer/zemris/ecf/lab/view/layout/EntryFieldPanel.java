@@ -9,6 +9,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  * Field for defining existence of specified parameter (check box), parameter
@@ -27,14 +29,6 @@ public class EntryFieldPanel extends JPanel {
 	private boolean mandatory = false;
 
 	private final Dimension dim = new Dimension(130, 20);
-
-	/**
-	 * @param label Parameter name
-	 * @param text Parameter value
-	 */
-	public EntryFieldPanel(JLabel label, JTextField text) {
-		this(label, text, BoxLayout.X_AXIS);
-	}
 
 	/**
 	 * @param label Parameter name
@@ -68,9 +62,31 @@ public class EntryFieldPanel extends JPanel {
 		setLayout(new BoxLayout(this, axis));
 		checkBox = new JCheckBox();
 		checkBox.setSelected(false);
+
+		text.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				textUpdated();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				textUpdated();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				textUpdated();
+			}
+		});
+
 		add(checkBox);
 		add(label);
 		add(text);
+	}
+
+	private void textUpdated() {
+		checkBox.setSelected(true);
 	}
 
 	/**

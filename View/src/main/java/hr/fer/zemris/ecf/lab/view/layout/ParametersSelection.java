@@ -53,7 +53,6 @@ public class ParametersSelection extends JPanel {
         genSel = new EntryBlockSelection<>(new DropDownPanel<>(params.genotypes));
         regList = EntryListPanel.getComponent(params.registry.getEntryList());
         String file = new File("").getAbsolutePath();
-        String log = file;
         add(new TempPanel(algSel, genSel, new JScrollPane(regList)), BorderLayout.CENTER);
         JButton button = new JButton(new AbstractAction() {
 
@@ -66,7 +65,7 @@ public class ParametersSelection extends JPanel {
         });
         button.setText("Run");
         int cores = Runtime.getRuntime().availableProcessors();
-        definePanel = new DefinePanel(file, log, cores, button);
+        definePanel = new DefinePanel(file, cores, button);
         add(definePanel, BorderLayout.SOUTH);
     }
 

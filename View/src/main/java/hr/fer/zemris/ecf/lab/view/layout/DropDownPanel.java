@@ -41,7 +41,7 @@ public class DropDownPanel<T extends EntryBlock> extends JPanel implements ItemL
 		int n = blocks.size();
 		model = new String[n];
 		for (int i = 0; i < n; i++) {
-			model[i] = blocks.get(i).toString();
+			model[i] = blocks.get(i).getName();
 		}
 		box = new JComboBox<>(model);
 		box.setEditable(false);

@@ -6,7 +6,7 @@ import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.task.ExperimentsManager;
 import hr.fer.zemris.ecf.lab.engine.task.JobListener;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,8 @@ public class ResultProgressFrame extends JFrame implements JobListener {
 
     private JPanel panel = null;
     private ExperimentsManager manager;
-    private Map<Job, JobProgressPanel> map = new HashMap<>();
+    private Map<Job, JobProgressPanel> panelMap = new HashMap<>();
+    private Map<Job, LogModel> logMap = new HashMap<>();
 
     public ResultProgressFrame() {
         super();
@@ -45,7 +46,8 @@ public class ResultProgressFrame extends JFrame implements JobListener {
 
     public void runExperiment(Configuration conf, String ecfPath, String confPath, int threads) {
         panel.removeAll();
-        map.clear();
+        panelMap.clear();
+        logMap.clear();
         manager.runExperiment(conf, ecfPath, confPath, threads);
         setVisible(true);
     }
@@ -59,39 +61,54 @@ public class ResultProgressFrame extends JFrame implements JobListener {
         JobProgressPanel jpp = new JobProgressPanel(text);
         jpp.setButtonText(INITIALIZED);
         jpp.getButton().setEnabled(false);
+        jpp.setMaximumSize(new Dimension(Integer.MAX_VALUE, jpp.getPreferredSize().height));
 
         return jpp;
     }
 
     @Override
     public void jobInitialized(Job job) {
-        JobProgressPanel jpp = createComp("TODO");
+        JobProgressPanel jpp = createComp("Experiment");
         add(jpp);
-        map.put(job, jpp);
+        panelMap.put(job, jpp);
     }
 
     @Override
     public void jobStarted(Job job) {
-        JobProgressPanel jpp = map.get(job);
-        jpp.setButtonText(STARTED);
+        SwingUtilities.invokeLater(() -> {
+            if (panelMap.containsKey(job)) {
+                JobProgressPanel jpp = panelMap.get(job);
+                jpp.setButtonText(STARTED);
+            }
+        });
     }
 
     @Override
     public void jobFinished(Job job, LogModel log) {
-        JobProgressPanel jpp = map.get(job);
-        jpp.setButtonText(FINISHED);
-        jpp.getButton().setEnabled(true);
-        jpp.getButton().setAction(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new FrameDisplayer().displayLog(log);
+        logMap.put(job, log);
+        SwingUtilities.invokeLater(() -> {
+            if (panelMap.containsKey(job)) {
+                JobProgressPanel jpp = panelMap.get(job);
+                jpp.getButton().setAction(new AbstractAction() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        LogModel l = logMap.get(job);
+                        new FrameDisplayer().displayLog(l);
+                    }
+                });
+                jpp.setButtonText(FINISHED);
+                jpp.getButton().setEnabled(true);
             }
         });
     }
 
     @Override
     public void jobFailed(Job job) {
-        JobProgressPanel jpp = map.get(job);
-        jpp.setButtonText(FAILED);
+        SwingUtilities.invokeLater(() -> {
+            if (panelMap.containsKey(job)) {
+                JobProgressPanel jpp = panelMap.get(job);
+                jpp.setButtonText(FAILED);
+            }
+        });
     }
 }

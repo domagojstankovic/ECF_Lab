@@ -1,6 +1,5 @@
 package hr.fer.zemris.ecf.lab.engine.param;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EntryBlock extends EntryList {

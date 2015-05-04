@@ -15,17 +15,14 @@ public class DefinePanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private DefineField params;
-	private DefineField log;
 	private DefineField threadsCount;
 
-	public DefinePanel(String paramsPath, String logPath, int threads, JButton button) {
+	public DefinePanel(String paramsPath, int threads, JButton button) {
 		super();
 //		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		setLayout(new FlowLayout(FlowLayout.CENTER));
 		params = new DefineField("Parameters path", paramsPath, true);
 		add(params);
-		log = new DefineField("Log path", logPath, true);
-		add(log);
 		threadsCount = new DefineField("Number of threads", String.valueOf(threads), false);
 		add(threadsCount);
 		add(button);
@@ -43,20 +40,6 @@ public class DefinePanel extends JPanel {
 	 */
 	public void setParamsPath(String path) {
 		params.setText(path);
-	}
-
-	/**
-	 * @return Path to the log file
-	 */
-	public String getLogPath() {
-		return log.getText();
-	}
-
-	/**
-	 * @param path Path to the log file
-	 */
-	public void setLogPath(String path) {
-		log.setText(path);
 	}
 
 	/**

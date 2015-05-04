@@ -262,20 +262,8 @@ public class ECFLab extends JFrame {
 		action.putValue(Action.SHORT_DESCRIPTION, "Open log file");
 		actions.put("OpenLog", action);
 
-		action = new AbstractAction("Save") {
-
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveLog();
-			}
-		};
-		action.putValue(Action.SHORT_DESCRIPTION, "Save log file");
-		actions.put("SaveLog", action);
-
 		action = new AbstractAction("Results frame") {
-			
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -309,34 +297,6 @@ public class ECFLab extends JFrame {
 		};
 		action.putValue(Action.SHORT_DESCRIPTION, "Go to ECF home page");
 		actions.put("ecfHomePage", action);
-	}
-
-	/**
-	 * Copies log file created during last experiment to the destination path.
-	 */
-	protected void saveLog() {
-		ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
-		boolean b = ps.wasRunBefore();
-		if (!b) {
-			JOptionPane.showMessageDialog(this, "This experiment was never run before!", "Action unavailable",
-					JOptionPane.INFORMATION_MESSAGE);
-			return;
-		}
-		JFileChooser fc = new JFileChooser();
-		int retVal = fc.showSaveDialog(this);
-		if (retVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			Path source = Paths.get(ps.getLastLogFilePath());
-			Path target = Paths.get(file.getAbsolutePath());
-			CopyOption options = StandardCopyOption.REPLACE_EXISTING;
-			try {
-				Files.copy(source, target, options);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			JOptionPane.showMessageDialog(this, "Log file copied successfully!", "Saved successfully",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
 	}
 
 	/**
@@ -520,7 +480,6 @@ public class ECFLab extends JFrame {
 
 		JMenu logMenu = new JMenu("Log");
 		logMenu.add(actions.get("OpenLog"));
-		logMenu.add(actions.get("SaveLog"));
 		logMenu.add(actions.get("ResultsFrame"));
 
 		JMenu exeMenu = new JMenu("ECF");
