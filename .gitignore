@@ -110,6 +110,20 @@ $RECYCLE.BIN/
 *.lnk
 
 
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+
 ### Gradle ###
 .gradle
 build/
@@ -118,7 +132,7 @@ build/
 gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-!gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.jar
 
 
 ### NetBeans ###
@@ -150,19 +164,6 @@ nb-configuration.xml
 *.exe
 *.o
 *.so
-
-# Packages #
-############
-# it's better to unpack these files and commit the raw source
-# git has its own built in compression methods
-*.7z
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
 
 # Logs and databases #
 ######################
