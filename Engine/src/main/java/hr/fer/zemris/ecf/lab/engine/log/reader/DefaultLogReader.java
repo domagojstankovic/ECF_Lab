@@ -132,7 +132,7 @@ public class DefaultLogReader implements LogReader {
     }
 
     private static String extractValue(String str) {
-        return str.split(":")[1].trim();
+        return str.substring(str.indexOf(':') + 1).trim();
     }
 
     private static class EvalsStats {

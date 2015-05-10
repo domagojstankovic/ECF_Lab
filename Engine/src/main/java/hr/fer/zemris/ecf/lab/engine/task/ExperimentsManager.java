@@ -9,11 +9,8 @@ import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 
-import javax.swing.*;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +19,7 @@ import java.util.List;
  */
 public class ExperimentsManager implements JobObserver {
 
-    private static final boolean DAEMON = false;
-
+    private boolean daemon = false;
     private JobListener listener;
 
     public ExperimentsManager(JobListener listener) {
@@ -32,7 +28,7 @@ public class ExperimentsManager implements JobObserver {
 
     public void runExperiment(Configuration conf, String ecfPath, String confPath, int threads) {
         try {
-            boolean change = false;
+            boolean implicitParallelism = false;
             int repeats = 1;
             List<Entry> registryList = conf.registry.getEntryList();
             Entry batchRepeatEntry = Utils.findEntry(registryList, "batch.repeats");
@@ -41,8 +37,9 @@ public class ExperimentsManager implements JobObserver {
                     repeats = Integer.parseInt(batchRepeatEntry.value);
                     if (repeats > 1) {
                         // N repeats, N threads -> separate repeats in N jobs (1 repeat per job)
+                        // implicit parallelism
                         batchRepeatEntry.value = "1";
-                        change = true;
+                        implicitParallelism = true;
                     } else {
                         // 1 job (1 repeat), N threads -> change to 1 thread
                         threads = 1;
@@ -58,14 +55,25 @@ public class ExperimentsManager implements JobObserver {
 
             // create jobs
             final List<Job> jobs;
-            if (change) {
+            if (implicitParallelism) {
+                // implicit parallelism
                 jobs = new ArrayList<>(repeats);
+                int len = Integer.valueOf(repeats).toString().length();
+                Entry logFilenameEntry = Utils.findEntry(registryList, "log.filename");
+                String originalLogFilename = logFilenameEntry.value;
                 for (int i = 0; i < repeats; i++) {
-                    Job job = new Job(ecfPath, confPath);
+                    // change configuration (log.filename) and write it to changed location
+                    String currConfPath = confPath + ".conf__" + (i + 1) + ".part";
+                    String currLogFilename = Utils.addBeforeExtension(originalLogFilename, (i + 1), len);
+                    logFilenameEntry.value = currLogFilename;
+                    ConfigurationService.getInstance().getWriter().write(new File(currConfPath), conf);
+
+                    Job job = new Job(ecfPath, currConfPath, true);
                     job.setObserver(this);
                     jobs.add(job);
                 }
             } else {
+                // no implicit parallelism, just 1 job
                 jobs = new ArrayList<>(1);
                 Job job = new Job(ecfPath, confPath);
                 job.setObserver(this);
@@ -85,7 +93,7 @@ public class ExperimentsManager implements JobObserver {
                     e.printStackTrace();
                 }
             });
-            t.setDaemon(DAEMON);
+            t.setDaemon(daemon);
             t.start();
         } catch (Exception e) {
             throw new ExperimentException(e.getMessage(), e.getCause());
@@ -99,6 +107,7 @@ public class ExperimentsManager implements JobObserver {
 
     @Override
     public void jobFinished(Job job, ProcessOutput output) {
+        deleteConfIfNeeded(job);
         InputStream is = output.getStdout();
         LogModel log = LogReaderProvider.getReader().read(is);
         listener.jobFinished(job, log);
@@ -106,7 +115,22 @@ public class ExperimentsManager implements JobObserver {
 
     @Override
     public void jobFailed(Job job) {
+        deleteConfIfNeeded(job);
         listener.jobFailed(job);
     }
 
+    private void deleteConfIfNeeded(Job job) {
+        if (job.shouldDeleteConf()) {
+            // job was created with implicit parallelism, delete configuration file
+            String confPath = job.getConfigPath();
+            File configFile = new File(confPath);
+            if (configFile.exists()) {
+                configFile.delete();
+            }
+        }
+    }
+
+    public void setDaemon(boolean daemon) {
+        this.daemon = daemon;
+    }
 }

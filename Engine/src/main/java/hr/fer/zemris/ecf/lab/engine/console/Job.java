@@ -15,8 +15,9 @@ import hr.fer.zemris.ecf.lab.engine.task.TaskMannager;
  */
 public class Job {
 
-	public String ecfPath;
-	public String configPath;
+	private String ecfPath;
+	private String configPath;
+	private boolean shouldDeleteConf;
 	
 	private JobObserver observer = null;
 
@@ -32,6 +33,25 @@ public class Job {
 	public Job(String ecfPath, String configPath) {
 		this.ecfPath = ecfPath;
 		this.configPath = configPath;
+		shouldDeleteConf = false;
+	}
+
+	public Job(String ecfPath, String configPath, boolean shouldDeleteConf) {
+		this.ecfPath = ecfPath;
+		this.configPath = configPath;
+		this.shouldDeleteConf = shouldDeleteConf;
+	}
+
+	public String getConfigPath() {
+		return configPath;
+	}
+
+	public String getEcfPath() {
+		return ecfPath;
+	}
+
+	public boolean shouldDeleteConf() {
+		return shouldDeleteConf;
 	}
 
 	public void setObserver(JobObserver observer) {

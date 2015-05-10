@@ -66,5 +66,4 @@ public class EntryBlock extends EntryList {
 	public String toString() {
 		return name + "\n" + entryList.toString();
 	}
-	
 }

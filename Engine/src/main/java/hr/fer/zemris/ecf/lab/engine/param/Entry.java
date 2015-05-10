@@ -1,7 +1,7 @@
 package hr.fer.zemris.ecf.lab.engine.param;
 
 /**
- * This class is the representation of the one entry form the parameters file that can belong to {@link Algorithm} or {@link Genotype} or {@link Registry}.
+ * This class represents one entry from the configuration file.
  * @version 1.0
  *
  */
@@ -10,11 +10,13 @@ public class Entry {
 	/**
 	 * Name of the entry.
 	 */
-	public String key; //name
+	public String key;
+
 	/**
 	 * Description of the entry (usually provided by ECF parameters dumping)
 	 */
-	public String desc; //description
+	public String desc;
+
 	/**
 	 * Value of that entry.
 	 */
@@ -59,5 +61,4 @@ public class Entry {
 		}
 		return str;
 	}
-
 }

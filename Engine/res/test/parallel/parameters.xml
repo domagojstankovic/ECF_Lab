@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--There are no user comments for this parameters.-->
+<ECF>
+	<Algorithm>
+		<RouletteWheel>
+			<Entry desc="" key="crxprob">0.5</Entry>
+			<Entry desc="" key="selpressure">10</Entry>
+		</RouletteWheel>
+	</Algorithm>
+	<Genotype>
+		<BitString>
+			<Entry desc="" key="size">20</Entry>
+		</BitString>
+	</Genotype>
+	<Registry>
+		<Entry desc="" key="batch.repeats">10</Entry>
+		<Entry desc="" key="log.filename">res/test/parallel/__parallel__log.txt</Entry>
+		<Entry desc="" key="log.level">3</Entry>
+		<Entry desc="" key="milestone.interval">0</Entry>
+		<Entry desc="" key="mutation.indprob">0.3</Entry>
+		<Entry desc="" key="population.demes">5</Entry>
+		<Entry desc="" key="population.size">30</Entry>
+		<Entry desc="" key="randomizer.seed">0</Entry>
+		<Entry desc="" key="term.maxgen">50</Entry>
+	</Registry>
+</ECF>

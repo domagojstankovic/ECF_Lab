@@ -32,7 +32,7 @@ public class CommandPrompt implements Console {
 
     @Override
     public void execute(Job job) {
-        String command = job.ecfPath + " " + job.configPath;
+        String command = job.getEcfPath() + " " + job.getConfigPath();
         synchronized (System.out) {
             System.out.println("cmd.exe /c \"" + command + "\"");
         }

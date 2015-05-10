@@ -23,8 +23,8 @@ public class Terminal implements Console {
 
     @Override
     public void execute(Job job) {
-        String programPath = job.ecfPath;
-        String args = job.configPath;
+        String programPath = job.getEcfPath();
+        String args = job.getConfigPath();
         synchronized (System.out) {
             System.out.println(programPath + " " + args);
         }
