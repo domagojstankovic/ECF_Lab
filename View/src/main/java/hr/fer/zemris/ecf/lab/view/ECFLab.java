@@ -52,7 +52,6 @@ public class ECFLab extends JFrame {
 	private JMenuBar menuBar = new JMenuBar();
 	private JTabbedPane tabbedPane;
 	private JToolBar toolbar;
-	private String parDumpPath;
 	private ParametersList parDump;
 	private LogDisplayer openResultDisplay;
 
@@ -104,7 +103,6 @@ public class ECFLab extends JFrame {
 		if (retVal == JOptionPane.OK_OPTION) {
 			String ecfPath = ecfExePanel.getText();
 			InfoService.setEcfPath(ecfPath);
-			parDumpPath = SettingsProvider.getSettings().getValue(SettingsKey.DEFAULT_PARAMS_DUMP);
 			setTitle(APP_TITLE + " - " + ecfPath);
 			parDump = callParDump();
 			InfoService.setLastSelectedPath(ecfPath);
@@ -441,6 +439,16 @@ public class ECFLab extends JFrame {
 	protected ParametersList callParDump() {
 		TaskMannager tm = new TaskMannager();
 		String ecfPath = InfoService.getEcfPath();
+		String parDumpPath;
+		try {
+			File tmpFile = File.createTempFile("ecflab-pardump", ".xml");
+			parDumpPath = tmpFile.getAbsolutePath();
+			tmpFile.deleteOnExit();
+		} catch (IOException e) {
+			LoggerProvider.getLogger().log(e);
+			parDumpPath = SettingsProvider.getSettings().getValue(SettingsKey.DEFAULT_PARAMS_DUMP);
+		}
+		System.out.println("Pardump path: " + parDumpPath);
 		return tm.getInitialECFparams(ecfPath, parDumpPath);
 	}
 

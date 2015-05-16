@@ -6,7 +6,7 @@ package hr.fer.zemris.ecf.lab.model.settings;
  * @version 1.0
  */
 public class SettingsKey {
-	
+
 	public static final String DEFAULT_PARAMS_DUMP = "default_params_dump";
 	public static final String LOG_FILE_PATH = "log_file_path";
 	public static final String ECF_HOME_PAGE = "ecf_home_page";
