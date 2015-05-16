@@ -3,6 +3,7 @@ package hr.fer.zemris.ecf.lab.model.logger.impl;
 import hr.fer.zemris.ecf.lab.model.logger.Logger;
 import hr.fer.zemris.ecf.lab.model.logger.LoggerException;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Calendar;
@@ -27,7 +28,9 @@ public class FileLogger implements Logger {
 	@Override
 	public void log(String message) {
 		try {
-			FileWriter fw = new FileWriter(filePath, true);
+			File file = new File(filePath);
+			file.getParentFile().mkdirs();
+			FileWriter fw = new FileWriter(file, true);
 			String string = Calendar.getInstance().getTime().toString() + "\n" + message + "\n-----------------------\n";
 			fw.write(string);
 			fw.close();

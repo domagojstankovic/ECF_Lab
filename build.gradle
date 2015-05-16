@@ -10,6 +10,8 @@ buildscript {
 allprojects{
     apply plugin: 'idea'
     apply plugin: 'eclipse'
+
+    version = '1.0'
 }
 
 subprojects{
@@ -35,8 +37,6 @@ subprojects{
         testCompile "junit:junit:${junitVersion}"
     }
 }
-
-version = '1.0'
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.3'

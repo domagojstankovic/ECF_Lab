@@ -1,5 +1,6 @@
 package hr.fer.zemris.ecf.lab.engine.console;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -12,6 +13,8 @@ public class Terminal implements Console {
     @Override
     public void pardump(String ecfPath, String pardumpPath) {
         try {
+            File file = new File(pardumpPath);
+            file.getParentFile().mkdirs();
             Process process = new ProcessBuilder(ecfPath, "-gui", "-pardump", pardumpPath).start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {

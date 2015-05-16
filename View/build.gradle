@@ -6,3 +6,11 @@ dependencies {
     compile project(':Model')
     compile 'jfree:jfreechart:1.0.12'
 }
+
+jar{
+    baseName = 'ECFLab'
+    manifest {
+        attributes 'Main-Class': 'hr.fer.zemris.ecf.lab.view.ECFLab'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}

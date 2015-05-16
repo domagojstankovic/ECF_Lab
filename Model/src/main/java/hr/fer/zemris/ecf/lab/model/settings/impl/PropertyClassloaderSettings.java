@@ -29,35 +29,18 @@ public class PropertyClassloaderSettings implements Settings {
 		try {
 			read();
 		} catch (IOException | NullPointerException e) {
-			throw new SettingsException("Configuration file reading failed!");
+			throw new SettingsException("Settings file reading failed!");
 		}
 	}
 
 	private void read() throws IOException {
-		InputStream is = PropertyClassloaderSettings.class.getClassLoader().getResourceAsStream(filePath);
+		InputStream is = ClassLoader.getSystemClassLoader().getResourceAsStream(filePath);
 		properties.load(is);
 		is.close();
-	}
-	
-	private void write() throws IOException {
-		OutputStream os = new FileOutputStream(filePath);
-		properties.store(os, "");
-		os.close();
 	}
 
 	@Override
 	public String getValue(String key) {
 		return properties.getProperty(key);
 	}
-
-	@Override
-	public void changeValue(String key, String value) {
-		properties.setProperty(key, value);
-		try {
-			write();
-		} catch (IOException | NullPointerException e) {
-			throw new SettingsException("Writing to configuration file failed!");
-		}
-	}
-
 }

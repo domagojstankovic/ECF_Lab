@@ -1,26 +1,15 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
-import hr.fer.zemris.ecf.lab.engine.console.ProcessOutput;
-import hr.fer.zemris.ecf.lab.engine.log.LogModel;
-import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
-import hr.fer.zemris.ecf.lab.model.info.InfoService;
-import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
-import hr.fer.zemris.ecf.lab.view.ECFLab;
-import hr.fer.zemris.ecf.lab.engine.console.JobObserver;
-import hr.fer.zemris.ecf.lab.engine.console.Job;
 import hr.fer.zemris.ecf.lab.engine.param.*;
+import hr.fer.zemris.ecf.lab.model.info.InfoService;
 import hr.fer.zemris.ecf.lab.view.display.ResultProgressFrame;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.*;
 
 /**
  * Panel that displays available parameters for the selected ECF executable

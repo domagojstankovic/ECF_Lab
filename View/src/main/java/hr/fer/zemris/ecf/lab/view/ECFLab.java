@@ -14,7 +14,7 @@ import hr.fer.zemris.ecf.lab.model.logger.impl.FileLogger;
 import hr.fer.zemris.ecf.lab.model.settings.Settings;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsKey;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsProvider;
-import hr.fer.zemris.ecf.lab.model.settings.impl.PropertyFileSettings;
+import hr.fer.zemris.ecf.lab.model.settings.impl.PropertyClassloaderSettings;
 import hr.fer.zemris.ecf.lab.view.display.BrowsePanel;
 import hr.fer.zemris.ecf.lab.view.display.FrameDisplayer;
 import hr.fer.zemris.ecf.lab.view.display.LogDisplayer;
@@ -45,7 +45,7 @@ import java.util.Map;
 public class ECFLab extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final String CONFIGURATION_FILE = "res/settings/settings.properties";
+	private static final String SETTINGS_FILE = "settings.properties";
 	private static final String APP_TITLE = "ECF Lab";
 
 	private Map<String, Action> actions = new HashMap<>();
@@ -67,8 +67,9 @@ public class ECFLab extends JFrame {
 
 			setTitle(APP_TITLE);
 			try {
-				Image image = ImageIO.read(new FileInputStream(SettingsProvider.getSettings().getValue(SettingsKey.ICON_APP_PATH)));
-				setIconImage(image);
+				String iconPath = SettingsProvider.getSettings().getValue(SettingsKey.ICON_APP_PATH);
+				Image iconImage = ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream(iconPath));
+				setIconImage(iconImage);
 			} catch (IOException e) {
 				LoggerProvider.getLogger().log(e);
 			}
@@ -157,9 +158,14 @@ public class ECFLab extends JFrame {
 	protected JButton makeToolbarButton(String imgPath, String action, String toolTipText) {
 		JButton button = new JButton(actions.get(action));
 		button.setText("");
-		button.setToolTipText(toolTipText);;
-		ImageIcon icon = new ImageIcon(imgPath);
-		button.setIcon(icon);
+		button.setToolTipText(toolTipText);
+		try {
+			Image image = ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream(imgPath));
+			ImageIcon icon = new ImageIcon(image);
+			button.setIcon(icon);
+		} catch (IOException e) {
+			LoggerProvider.getLogger().log(e);
+		}
 		return button;
 	}
 
@@ -495,24 +501,6 @@ public class ECFLab extends JFrame {
 	}
 
 	/**
-	 * All main actions.
-	 * 
-	 * @return Main actions.
-	 */
-	public Map<String, Action> getActions() {
-		return actions;
-	}
-
-	/**
-	 * Path to the parameters dump file.
-	 * 
-	 * @return Path to the parameters dump file
-	 */
-	public String getParDumpPath() {
-		return parDumpPath;
-	}
-
-	/**
 	 * Object with all parameters from the selected ECF exe.
 	 * 
 	 * @return {@link hr.fer.zemris.ecf.lab.engine.param.ParametersList} object with all the parameters from the
@@ -529,18 +517,20 @@ public class ECFLab extends JFrame {
 	 *            Not used
 	 */
 	public static void main(String[] args) {
-		Settings settings = new PropertyFileSettings(CONFIGURATION_FILE);
+		Settings settings = new PropertyClassloaderSettings(SETTINGS_FILE);
 		SettingsProvider.setSettings(settings);
 
-		Logger log = new FileLogger(settings.getValue(SettingsKey.LOG_FILE_PATH));
-		LoggerProvider.setLogger(log);
+		Logger logger = new FileLogger(settings.getValue(SettingsKey.LOG_FILE_PATH));
+		LoggerProvider.setLogger(logger);
+
+		logger.log("Proba");
 
 		ConfigurationService.getInstance().setReader(new XmlConfigurationReader());
 		ConfigurationService.getInstance().setWriter(new XmlConfigurationWriter());
 
 		InfoService.setLastSelectedPath(new File("").getAbsolutePath());
 
-		Thread.setDefaultUncaughtExceptionHandler(new EDTExceptionHandler(log));
+		Thread.setDefaultUncaughtExceptionHandler(new EDTExceptionHandler(logger));
 		System.setProperty("sun.awt.exception.handler", EDTExceptionHandler.class.getName());
 
 		SwingUtilities.invokeLater(() -> startGUIApp());

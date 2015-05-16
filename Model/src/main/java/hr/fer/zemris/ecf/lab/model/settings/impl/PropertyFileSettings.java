@@ -39,26 +39,10 @@ public class PropertyFileSettings implements Settings {
 		properties.load(is);
 		is.close();
 	}
-	
-	private void write() throws IOException {
-		OutputStream os = new FileOutputStream(filePath);
-		properties.store(os, "");
-		os.close();
-	}
 
 	@Override
 	public String getValue(String key) {
 		return properties.getProperty(key);
-	}
-
-	@Override
-	public void changeValue(String key, String value) {
-		properties.setProperty(key, value);
-		try {
-			write();
-		} catch (IOException | NullPointerException e) {
-			throw new SettingsException("Writing to configuration file failed!");
-		}
 	}
 
 }

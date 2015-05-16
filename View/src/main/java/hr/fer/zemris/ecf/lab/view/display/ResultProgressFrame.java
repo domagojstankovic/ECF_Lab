@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.*;
 
@@ -29,8 +30,8 @@ public class ResultProgressFrame extends JFrame implements JobListener {
 
     private JPanel panel = null;
     private ExperimentsManager manager;
-    private Map<Job, JobProgressPanel> panelMap = new HashMap<>();
-    private Map<Job, LogModel> logMap = new HashMap<>();
+    private Map<Job, JobProgressPanel> panelMap = new ConcurrentHashMap<>();
+    private Map<Job, LogModel> logMap = new ConcurrentHashMap<>();
 
     public ResultProgressFrame() {
         super();

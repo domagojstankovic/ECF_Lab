@@ -1,5 +1,6 @@
 package hr.fer.zemris.ecf.lab.engine.console;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -13,10 +14,8 @@ public class CommandPrompt implements Console {
     public void pardump(String ecfPath, String pardumpPath) {
 
         try {
-            /**
-             * Process is created because it has nice waitFor method which waits for c process to end
-             * and doesn't execute Java code till then.
-             */
+            File file = new File(pardumpPath);
+            file.getParentFile().mkdirs();
             String controlString = "-gui -pardump";
             String cmd3 = "\"" + (ecfPath + " " + controlString + " " + pardumpPath) + "\"";
             ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", cmd3);

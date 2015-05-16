@@ -38,7 +38,6 @@ public class ExperimentsManager implements JobObserver {
                     if (repeats > 1) {
                         // N repeats, N threads -> separate repeats in N jobs (1 repeat per job)
                         // implicit parallelism
-                        batchRepeatEntry.value = "1";
                         implicitParallelism = true;
                     } else {
                         // 1 job (1 repeat), N threads -> change to 1 thread
@@ -57,13 +56,14 @@ public class ExperimentsManager implements JobObserver {
             final List<Job> jobs;
             if (implicitParallelism) {
                 // implicit parallelism
+                batchRepeatEntry.value = "1";
                 jobs = new ArrayList<>(repeats);
                 int len = Integer.valueOf(repeats).toString().length();
                 Entry logFilenameEntry = Utils.findEntry(registryList, "log.filename");
                 String originalLogFilename = logFilenameEntry.value;
                 for (int i = 0; i < repeats; i++) {
                     // change configuration (log.filename) and write it to changed location
-                    String currConfPath = confPath + ".conf__" + (i + 1) + ".part";
+                    String currConfPath = confPath + ".part__" + (i + 1);
                     String currLogFilename = Utils.addBeforeExtension(originalLogFilename, (i + 1), len);
                     logFilenameEntry.value = currLogFilename;
                     ConfigurationService.getInstance().getWriter().write(new File(currConfPath), conf);
