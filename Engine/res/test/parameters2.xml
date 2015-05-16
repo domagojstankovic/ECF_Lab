@@ -18,7 +18,6 @@
 		<Entry key="mutation.indprob">0.3</Entry> 
 		<Entry key="term.maxgen">30</Entry> 
 		<Entry key="log.level">3</Entry>
-		<Entry key="log.filename">log.txt</Entry>
 	</Registry>
 </ECF>
 

@@ -49,7 +49,6 @@ public class TerminalTest {
 
             assertTrue(new File(ecfPath).exists());
             assertTrue(new File(paramsPath).exists());
-            //assertTrue(new File(prefix + "log.txt").exists());
         }
     }
 }
