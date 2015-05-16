@@ -8,7 +8,7 @@ import java.io.IOException;
  *
  * @version 1.0
  */
-public class CommandPrompt implements Console {
+public class CommandPrompt extends AbstractConsole {
 
     @Override
     public void pardump(String ecfPath, String pardumpPath) {
@@ -32,21 +32,9 @@ public class CommandPrompt implements Console {
     @Override
     public void execute(Job job) {
         String command = job.getEcfPath() + " " + job.getConfigPath();
-        synchronized (System.out) {
-            System.out.println("cmd.exe /c \"" + command + "\"");
-        }
-        try {
-            job.started();
-            String cmd3 = "\"" + command + "\"";
-            Process process = new ProcessBuilder("cmd.exe", "/c", cmd3).start();
-            ProcessOutput output = new ProcessOutput(process.getInputStream(), process.getErrorStream());
-            process.waitFor();
-            job.finished(output);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            job.failed();
-        }
-
+        print("cmd.exe /c \"" + command + "\"");
+        String cmd3 = "\"" + command + "\"";
+        runProcess(job, "cmd.exe", "/c", cmd3);
     }
 
 }
