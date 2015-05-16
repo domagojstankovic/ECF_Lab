@@ -20,6 +20,7 @@ public class SettingsKey {
 	public static final String ICON_OPEN_LOG_PATH = "icon_open_log_path";
 	public static final String ICON_SAVE_LOG_PATH = "icon_save_log_path";
 	public static final String ICON_APP_PATH = "icon_app_path";
+	public static final String ICON_ERASE_PATH = "icon_erase_path";
 
 	
 	private SettingsKey() {

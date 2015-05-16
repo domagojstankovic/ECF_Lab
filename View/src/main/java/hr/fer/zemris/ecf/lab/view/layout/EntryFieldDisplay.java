@@ -1,9 +1,14 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.engine.param.EntryBlock;
+import hr.fer.zemris.ecf.lab.model.logger.LoggerProvider;
+import hr.fer.zemris.ecf.lab.model.settings.SettingsKey;
+import hr.fer.zemris.ecf.lab.model.settings.SettingsProvider;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -22,8 +27,6 @@ import javax.swing.JPanel;
 public abstract class EntryFieldDisplay<T extends EntryBlock> extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-
-	protected static final Icon DELETE_ICON = new ImageIcon("res/img/Erase.png");
 
 	protected JButton display;
 	protected JButton delete;
@@ -48,7 +51,16 @@ public abstract class EntryFieldDisplay<T extends EntryBlock> extends JPanel {
 			}
 		};
 		delete = new JButton(deleteAction);
-		delete.setIcon(DELETE_ICON);
+
+		String imgPath = SettingsProvider.getSettings().getValue(SettingsKey.ICON_ERASE_PATH);
+		try {
+			Image image = ImageIO.read(ClassLoader.getSystemClassLoader().getResourceAsStream(imgPath));
+			ImageIcon icon = new ImageIcon(image);
+			delete.setIcon(icon);
+		} catch (IOException e) {
+			e.printStackTrace();
+			LoggerProvider.getLogger().log(e);
+		}
 
 		add(display, BorderLayout.CENTER);
 		add(delete, BorderLayout.EAST);
