@@ -1,6 +1,7 @@
 package hr.fer.zemris.ecf.lab.engine.console;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
@@ -28,19 +29,32 @@ public class Terminal implements Console {
     public void execute(Job job) {
         String programPath = job.getEcfPath();
         String args = job.getConfigPath();
-        synchronized (System.out) {
-            System.out.println(programPath + " " + args);
-        }
+        print(programPath + " " + args);
         try {
             job.started();
-            Process process = new ProcessBuilder(programPath, args).start();
+            File stdoutFile = File.createTempFile("ecflab-stdout", ".txt");
+            File stderrFile = File.createTempFile("ecflab-stderr", ".txt");
+
+            ProcessBuilder pb = new ProcessBuilder(programPath, args);
+            pb.redirectOutput(stdoutFile);
+            pb.redirectError(stderrFile);
+            Process process = pb.start();
             process.waitFor();
-            ProcessOutput output = new ProcessOutput(process.getInputStream(), process.getErrorStream());
+
+            ProcessOutput output = new ProcessOutput(new FileInputStream(stdoutFile), new FileInputStream(stderrFile));
             job.finished(output);
+
+            stdoutFile.deleteOnExit();
+            stderrFile.deleteOnExit();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             job.failed();
         }
     }
 
+    private void print(String str) {
+        synchronized (System.out) {
+            System.out.println(str);
+        }
+    }
 }
