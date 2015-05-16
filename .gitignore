@@ -174,3 +174,4 @@ nb-configuration.xml
 # Application specific #
 ########################
 res/log/
+res/dump/
