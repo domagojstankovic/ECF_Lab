@@ -35,6 +35,7 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	 */
 	public void write(File file, Configuration agrwGet) {
 		try {
+			file.getParentFile().mkdirs(); // create parent directories
 			writing(file, agrwGet);
 		} catch (ParserConfigurationException | TransformerException e) {
 			System.err.println("Error ocured while trying to create a parameters xml for ECF.");
