@@ -224,6 +224,19 @@ public class ECFLab extends JFrame {
 		action.putValue(Action.SHORT_DESCRIPTION, "Save configuration as");
 		actions.put("SaveConfAs", action);
 
+		action = new AbstractAction("Close tab") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				closeCurrentTab();
+			}
+		};
+		action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_DOWN_MASK));
+		action.putValue(Action.SHORT_DESCRIPTION, "Close current tab");
+		actions.put("CloseTab", action);
+
 		action = new AbstractAction("Open") {
 
 			private static final long serialVersionUID = 1L;
@@ -306,6 +319,13 @@ public class ECFLab extends JFrame {
 			LoggerProvider.getLogger().log(e);
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Closes current configuration tab.
+	 */
+	private void closeCurrentTab() {
+		tabbedPane.remove(tabbedPane.getSelectedIndex());
 	}
 
 	/**
@@ -461,6 +481,7 @@ public class ECFLab extends JFrame {
 		confMenu.add(actions.get("OpenConf"));
 		confMenu.add(actions.get("SaveConf"));
 		confMenu.add(actions.get("SaveConfAs"));
+		confMenu.add(actions.get("CloseTab"));
 
 		JMenu logMenu = new JMenu("Log");
 		logMenu.add(actions.get("OpenLog"));
