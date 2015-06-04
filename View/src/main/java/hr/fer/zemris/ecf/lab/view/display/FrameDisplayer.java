@@ -33,21 +33,25 @@ public class FrameDisplayer implements LogDisplayer {
 		} else {
 			// no errors
 			List<ExperimentRun> runs = log.getRuns();
-			TextButtonListFrame frame = new TextButtonListFrame("Runs");
-			int i = 1;
-			for (ExperimentRun run : runs) {
-				TextButtonPanel tbp = frame.createComp("Log " + i);
-				tbp.getButton().setAction(new AbstractAction() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						displayRun(run);
-					}
-				});
-				tbp.setButtonText("View");
-				i++;
+			if (runs.size() == 1) {
+				displayRun(runs.get(0));
+			} else {
+				TextButtonListFrame frame = new TextButtonListFrame("Runs");
+				int i = 1;
+				for (ExperimentRun run : runs) {
+					TextButtonPanel tbp = frame.createComp("Log " + i);
+					tbp.getButton().setAction(new AbstractAction() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							displayRun(run);
+						}
+					});
+					tbp.setButtonText("View");
+					i++;
+				}
+				frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				frame.setVisible(true);
 			}
-			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			frame.setVisible(true);
 		}
 	}
 
