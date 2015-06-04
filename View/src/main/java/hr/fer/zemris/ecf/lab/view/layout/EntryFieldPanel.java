@@ -28,8 +28,6 @@ public class EntryFieldPanel extends JPanel {
 	private JTextField text;
 	private boolean mandatory = false;
 
-	private final Dimension dim = new Dimension(130, 20);
-
 	/**
 	 * @param label Parameter name
 	 * @param text Parameter value
@@ -49,15 +47,18 @@ public class EntryFieldPanel extends JPanel {
 		this.label = label;
 		this.text = text;
 
-		label.setSize(dim);
-		label.setPreferredSize(dim);
-		label.setMaximumSize(dim);
-		label.setMinimumSize(dim);
+		Dimension lblDim = new Dimension(130, 20);
+		Dimension txtDim = new Dimension(Integer.MAX_VALUE, 20);
 
-		text.setSize(dim);
-		text.setPreferredSize(dim);
-		text.setMaximumSize(dim);
-		text.setMinimumSize(dim);
+		label.setSize(lblDim);
+		label.setPreferredSize(lblDim);
+		label.setMaximumSize(lblDim);
+		label.setMinimumSize(lblDim);
+
+		text.setSize(lblDim);
+		text.setPreferredSize(lblDim);
+		text.setMaximumSize(txtDim);
+		text.setMinimumSize(lblDim);
 
 		setLayout(new BoxLayout(this, axis));
 		checkBox = new JCheckBox();
