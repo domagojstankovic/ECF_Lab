@@ -12,7 +12,7 @@ public class Test {
 		LogReader off = LogReaderProvider.getReader();
 		try {
 			LogModel logModel = off.read(new FileInputStream("test/log.txt"));
-			List<Generation> gen = logModel.getGenerations();
+			List<Generation> gen = logModel.getRuns().get(0).getGenerations();
 			System.out.println(gen.get(gen.size()-1).population.stats.avg);
 		} catch (Exception e) {
 			e.printStackTrace();
