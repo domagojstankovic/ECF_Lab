@@ -6,11 +6,11 @@ import java.awt.*;
 /**
  * Created by Domagoj on 04/06/15.
  */
-public class ListDisplay extends JFrame {
+public class ListFrame extends JFrame {
 
     protected JPanel panel = null;
 
-    public ListDisplay(String title) {
+    public ListFrame(String title) {
         super();
         setTitle(title);
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);

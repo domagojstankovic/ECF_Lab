@@ -5,7 +5,8 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.task.ExperimentsManager;
 import hr.fer.zemris.ecf.lab.engine.task.JobListener;
-import hr.fer.zemris.ecf.lab.view.layout.ListDisplay;
+import hr.fer.zemris.ecf.lab.view.layout.ListFrame;
+import hr.fer.zemris.ecf.lab.view.layout.TextButtonListFrame;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +21,7 @@ import javax.swing.*;
  *
  * @author Domagoj
  */
-public class ResultProgressFrame extends ListDisplay implements JobListener {
+public class ResultProgressFrame extends TextButtonListFrame implements JobListener {
 
     private static final long serialVersionUID = 1L;
     private static final String INITIALIZED = "Initialized";
@@ -45,19 +46,12 @@ public class ResultProgressFrame extends ListDisplay implements JobListener {
         setVisible(true);
     }
 
-    private TextButtonPanel createComp(String text) {
-        TextButtonPanel jpp = new TextButtonPanel(text);
-        jpp.setButtonText(INITIALIZED);
-        jpp.getButton().setEnabled(false);
-        jpp.setMaximumSize(new Dimension(Integer.MAX_VALUE, jpp.getPreferredSize().height));
-
-        return jpp;
-    }
-
     @Override
     public void jobInitialized(Job job) {
-        TextButtonPanel jpp = createComp("Experiment");
-        add(jpp);
+        int cnt = panel.getComponentCount();
+        TextButtonPanel jpp = createComp("Experiment " + (cnt + 1));
+        jpp.setButtonText(INITIALIZED);
+        jpp.getButton().setEnabled(false);
         panelMap.put(job, jpp);
     }
 
