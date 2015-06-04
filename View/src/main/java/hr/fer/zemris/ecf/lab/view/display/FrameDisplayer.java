@@ -1,6 +1,7 @@
 package hr.fer.zemris.ecf.lab.view.display;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.view.chart.ChartFrame;
 import hr.fer.zemris.ecf.lab.view.chart.LineChartPanel;
 import hr.fer.zemris.ecf.lab.engine.log.Generation;
+import hr.fer.zemris.ecf.lab.view.layout.TextButtonListFrame;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -31,9 +33,21 @@ public class FrameDisplayer implements LogDisplayer {
 		} else {
 			// no errors
 			List<ExperimentRun> runs = log.getRuns();
+			TextButtonListFrame frame = new TextButtonListFrame("Runs");
+			int i = 1;
 			for (ExperimentRun run : runs) {
-				displayRun(run);
+				TextButtonPanel tbp = frame.createComp("Log " + i);
+				tbp.getButton().setAction(new AbstractAction() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						displayRun(run);
+					}
+				});
+				tbp.setButtonText("View");
+				i++;
 			}
+			frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			frame.setVisible(true);
 		}
 	}
 

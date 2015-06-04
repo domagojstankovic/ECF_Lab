@@ -13,7 +13,7 @@ public class TextButtonListFrame extends ListFrame {
         super(title);
     }
 
-    protected TextButtonPanel createComp(String lblText) {
+    public TextButtonPanel createComp(String lblText) {
         TextButtonPanel jpp = new TextButtonPanel(lblText);
         jpp.setMaximumSize(new Dimension(Integer.MAX_VALUE, jpp.getPreferredSize().height));
         add(jpp);
