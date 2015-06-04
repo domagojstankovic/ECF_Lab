@@ -6,12 +6,12 @@ import java.awt.*;
 /**
  * Created by Domagoj on 03/05/15.
  */
-public class JobProgressPanel extends JPanel {
+public class TextButtonPanel extends JPanel {
 
     private JLabel label;
     private JButton button;
 
-    public JobProgressPanel(String text) {
+    public TextButtonPanel(String text) {
         super();
         setLayout(new BorderLayout());
         label = new JLabel(text);

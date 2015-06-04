@@ -5,10 +5,10 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.task.ExperimentsManager;
 import hr.fer.zemris.ecf.lab.engine.task.JobListener;
+import hr.fer.zemris.ecf.lab.view.layout.ListDisplay;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,7 +20,7 @@ import javax.swing.*;
  *
  * @author Domagoj
  */
-public class ResultProgressFrame extends JFrame implements JobListener {
+public class ResultProgressFrame extends ListDisplay implements JobListener {
 
     private static final long serialVersionUID = 1L;
     private static final String INITIALIZED = "Initialized";
@@ -28,20 +28,12 @@ public class ResultProgressFrame extends JFrame implements JobListener {
     private static final String FINISHED = "Finished";
     private static final String FAILED = "Failed";
 
-    private JPanel panel = null;
     private ExperimentsManager manager;
-    private Map<Job, JobProgressPanel> panelMap = new ConcurrentHashMap<>();
+    private Map<Job, TextButtonPanel> panelMap = new ConcurrentHashMap<>();
     private Map<Job, LogModel> logMap = new ConcurrentHashMap<>();
 
     public ResultProgressFrame() {
-        super();
-        setTitle("Results");
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        setLocation(300, 200);
-        setSize(400, 350);
-        panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        getContentPane().add(new JScrollPane(panel));
+        super("Results");
         manager = new ExperimentsManager(this);
     }
 
@@ -53,13 +45,8 @@ public class ResultProgressFrame extends JFrame implements JobListener {
         setVisible(true);
     }
 
-    @Override
-    public Component add(Component comp) {
-        return panel.add(comp);
-    }
-
-    private JobProgressPanel createComp(String text) {
-        JobProgressPanel jpp = new JobProgressPanel(text);
+    private TextButtonPanel createComp(String text) {
+        TextButtonPanel jpp = new TextButtonPanel(text);
         jpp.setButtonText(INITIALIZED);
         jpp.getButton().setEnabled(false);
         jpp.setMaximumSize(new Dimension(Integer.MAX_VALUE, jpp.getPreferredSize().height));
@@ -69,7 +56,7 @@ public class ResultProgressFrame extends JFrame implements JobListener {
 
     @Override
     public void jobInitialized(Job job) {
-        JobProgressPanel jpp = createComp("Experiment");
+        TextButtonPanel jpp = createComp("Experiment");
         add(jpp);
         panelMap.put(job, jpp);
     }
@@ -78,7 +65,7 @@ public class ResultProgressFrame extends JFrame implements JobListener {
     public void jobStarted(Job job) {
         SwingUtilities.invokeLater(() -> {
             if (panelMap.containsKey(job)) {
-                JobProgressPanel jpp = panelMap.get(job);
+                TextButtonPanel jpp = panelMap.get(job);
                 jpp.setButtonText(STARTED);
             }
         });
@@ -89,7 +76,7 @@ public class ResultProgressFrame extends JFrame implements JobListener {
         logMap.put(job, log);
         SwingUtilities.invokeLater(() -> {
             if (panelMap.containsKey(job)) {
-                JobProgressPanel jpp = panelMap.get(job);
+                TextButtonPanel jpp = panelMap.get(job);
                 jpp.getButton().setAction(new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -107,7 +94,7 @@ public class ResultProgressFrame extends JFrame implements JobListener {
     public void jobFailed(Job job) {
         SwingUtilities.invokeLater(() -> {
             if (panelMap.containsKey(job)) {
-                JobProgressPanel jpp = panelMap.get(job);
+                TextButtonPanel jpp = panelMap.get(job);
                 jpp.setButtonText(FAILED);
             }
         });

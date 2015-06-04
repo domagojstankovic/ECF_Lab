@@ -49,7 +49,7 @@ public class ParametersSelection extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                clicked();
+                runClicked();
             }
         });
         button.setText("Run");
@@ -63,7 +63,7 @@ public class ParametersSelection extends JPanel {
      * created under the specified path. Then the ECF exe is run and the results
      * are written to the log file under the specified path.
      */
-    protected void clicked() {
+    protected void runClicked() {
         Configuration conf = getParameters();
         String ecfPath = InfoService.getEcfPath();
         String confPath = definePanel.getParamsPath();
