@@ -53,7 +53,7 @@ public class EntryBlockSelection<T extends EntryBlock> extends JPanel implements
 	}
 
 	public EntryBlockSelection(DropDownPanel<T> dropDown) {
-		this(new EntryDisplayList(new ArrayList<EntryFieldDisplay<?>>()), dropDown);
+		this(new EntryDisplayList(new ArrayList<>()), dropDown);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class EntryBlockSelection<T extends EntryBlock> extends JPanel implements
 	}
 
 	public void add() {
-		addedEntries.add(new FrameDisplay<T>(this, getSelectedItem(), getSelectedEntryList().copy()));
+		addedEntries.add(new FrameDisplay<>(this, getSelectedItem(), getSelectedEntryList().copy()));
 		JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
 		frame.repaint();
 	}
