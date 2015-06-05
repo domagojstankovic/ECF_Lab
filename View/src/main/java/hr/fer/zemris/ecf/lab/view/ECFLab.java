@@ -149,7 +149,7 @@ public class ECFLab extends JFrame {
 		button = makeToolbarButton(SettingsProvider.getSettings().getValue(SettingsKey.ICON_OPEN_LOG_PATH), "OpenLog", "Open log file");
 		toolbar.add(button);
 		
-		button = makeToolbarButton(SettingsProvider.getSettings().getValue(SettingsKey.ICON_SAVE_LOG_PATH), "SaveLog", "Save log file");
+		button = makeToolbarButton(SettingsProvider.getSettings().getValue(SettingsKey.ICON_RESULTS), "Results", "Show results");
 		toolbar.add(button);
 	}
 
@@ -249,17 +249,24 @@ public class ECFLab extends JFrame {
 		action.putValue(Action.SHORT_DESCRIPTION, "Open log file");
 		actions.put("OpenLog", action);
 
-		action = new AbstractAction("Results frame") {
+		action = new AbstractAction("Results") {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
-				ps.getProgressFrame().setVisible(true);
+				if (ps == null) {
+					JOptionPane.showMessageDialog(ECFLab.this, "No configuration tab opened", "No tab",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					ps.getProgressFrame().setVisible(true);
+				}
 			}
 		};
-		actions.put("ResultsFrame", action);
+		action.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK));
+		action.putValue(Action.SHORT_DESCRIPTION, "Show results");
+		actions.put("Results", action);
 		
 		action = new AbstractAction("Change ECF") {
 
@@ -484,7 +491,7 @@ public class ECFLab extends JFrame {
 
 		JMenu logMenu = new JMenu("Log");
 		logMenu.add(actions.get("OpenLog"));
-		logMenu.add(actions.get("ResultsFrame"));
+		logMenu.add(actions.get("Results"));
 
 		JMenu exeMenu = new JMenu("ECF");
 		exeMenu.add(actions.get("ChangeECFExe"));

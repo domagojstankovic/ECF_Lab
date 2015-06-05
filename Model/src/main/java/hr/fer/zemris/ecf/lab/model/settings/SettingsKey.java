@@ -18,7 +18,7 @@ public class SettingsKey {
 	public static final String ICON_SAVE_CONF_PATH = "icon_save_conf_path";
 	public static final String ICON_SAVE_CONF_AS_PATH = "icon_save_conf_as_path";
 	public static final String ICON_OPEN_LOG_PATH = "icon_open_log_path";
-	public static final String ICON_SAVE_LOG_PATH = "icon_save_log_path";
+	public static final String ICON_RESULTS = "icon_results";
 	public static final String ICON_APP_PATH = "icon_app_path";
 	public static final String ICON_ERASE_PATH = "icon_erase_path";
 
