@@ -38,7 +38,6 @@ public class DefineField extends JPanel {
 			textField.setMinimumSize(dim);
 			textField.setMaximumSize(dim);
 			textField.setPreferredSize(dim);
-//			textField.setSize(dim);
 			add(textField);
 		}
 	}

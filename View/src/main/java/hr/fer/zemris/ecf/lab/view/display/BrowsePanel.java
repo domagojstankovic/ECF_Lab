@@ -23,15 +23,14 @@ public class BrowsePanel extends JPanel {
 	private JTextField text;
 	private JButton button;
 	private File file = null;
+	private File startDir = null;
 
 	public BrowsePanel(String initText) {
 		super();
 		text = new JTextField(initText);
 		Dimension dim = new Dimension(200, 20);
 		text.setMinimumSize(dim);
-//		text.setMaximumSize(dim);
 		text.setPreferredSize(dim);
-//		text.setSize(dim);
 		button = new JButton(new AbstractAction() {
 
 			private static final long serialVersionUID = 1L;
@@ -47,6 +46,11 @@ public class BrowsePanel extends JPanel {
 		add(button);
 	}
 
+	public BrowsePanel(String initText, File currentDir) {
+		this(initText);
+		startDir = currentDir;
+	}
+
 	public BrowsePanel() {
 		this("");
 	}
@@ -55,7 +59,12 @@ public class BrowsePanel extends JPanel {
 	 * Action when "Browse" button is clicked. File chooser dialog appears.
 	 */
 	protected void click() {
-		JFileChooser fc = new JFileChooser();
+		JFileChooser fc;
+		if (startDir == null) {
+			fc = new JFileChooser();
+		} else {
+			fc = new JFileChooser(startDir);
+		}
 		int retVal = fc.showDialog(this, "Choose");
 		if (retVal != JFileChooser.APPROVE_OPTION) {
 			return;

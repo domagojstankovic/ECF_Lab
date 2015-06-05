@@ -96,7 +96,7 @@ public class ECFLab extends JFrame {
 	 * Displays dialog for choosing ECF executable file.
 	 */
 	private void chooseECFExe() {
-		BrowsePanel ecfExePanel = new BrowsePanel();
+		BrowsePanel ecfExePanel = new BrowsePanel("", new File(InfoService.getLastSelectedPath()));
 		int retVal = JOptionPane.showConfirmDialog(this, ecfExePanel, "Choose executable ECF file",
 				JOptionPane.OK_CANCEL_OPTION);
 
@@ -290,7 +290,7 @@ public class ECFLab extends JFrame {
 	 * Opens dialog for choosing log file to be viewed. Then displays results.
 	 */
 	protected void openLog() {
-		BrowsePanel logPathPanel = new BrowsePanel();
+		BrowsePanel logPathPanel = new BrowsePanel("", new File(InfoService.getLastSelectedPath()));
 		int retVal = JOptionPane.showConfirmDialog(this, logPathPanel, "Choose log file", JOptionPane.OK_CANCEL_OPTION);
 
 		if (retVal == JOptionPane.OK_OPTION) {
@@ -388,7 +388,6 @@ public class ECFLab extends JFrame {
 				algSel.add();
 			}
 
-			// TODO refactor this, code duplication
 			List<EntryBlock> gens = agru.genotypes.get(0);
 			for (EntryBlock gen : gens) {
 				List<Entry> entries = gen.getEntryList();
@@ -557,7 +556,7 @@ public class ECFLab extends JFrame {
 		ConfigurationService.getInstance().setReader(new XmlConfigurationReader());
 		ConfigurationService.getInstance().setWriter(new XmlConfigurationWriter());
 
-		InfoService.setLastSelectedPath(new File("").getAbsolutePath());
+		InfoService.setLastSelectedPath(new File(".").getAbsolutePath());
 
 		Thread.setDefaultUncaughtExceptionHandler(new EDTExceptionHandler(logger));
 		System.setProperty("sun.awt.exception.handler", EDTExceptionHandler.class.getName());
