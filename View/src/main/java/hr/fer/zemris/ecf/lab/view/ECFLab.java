@@ -365,12 +365,12 @@ public class ECFLab extends JFrame {
 			}
 			File file = fc.getSelectedFile();
 			String absolutePath = file.getAbsolutePath();
-			Configuration agru = ConfigurationService.getInstance().getReader().readArchive(file);
+			Configuration conf = ConfigurationService.getInstance().getReader().readArchive(file);
 			ParametersSelection ps = newTab(file.getAbsolutePath());
 
 			List<String> unavailable = new LinkedList<>();
 
-			List<EntryBlock> algs = agru.algorithms;
+			List<EntryBlock> algs = conf.algorithms;
 			for (EntryBlock alg : algs) {
 				List<Entry> entries = alg.getEntryList();
 				EntryBlockSelection<EntryBlock> algSel = ps.getAlgSel();
@@ -388,7 +388,7 @@ public class ECFLab extends JFrame {
 				algSel.add();
 			}
 
-			List<EntryBlock> gens = agru.genotypes.get(0);
+			List<EntryBlock> gens = conf.genotypes.get(0);
 			for (EntryBlock gen : gens) {
 				List<Entry> entries = gen.getEntryList();
 				EntryBlockSelection<EntryBlock> genSel = ps.getGenSel();
@@ -406,7 +406,7 @@ public class ECFLab extends JFrame {
 				genSel.add();
 			}
 
-			EntryList reg = agru.registry;
+			EntryList reg = conf.registry;
 			List<Entry> entries = reg.getEntryList();
 			EntryListPanel enp = ps.getRegList();
 			for (Entry entry : entries) {

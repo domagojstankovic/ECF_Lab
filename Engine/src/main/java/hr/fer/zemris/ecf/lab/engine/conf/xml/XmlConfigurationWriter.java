@@ -46,28 +46,28 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	/**
 	 * This method is used for writing parameters and user comments to the file.
 	 * @param file path to write parameters to.
-	 * @param agrw
+	 * @param conf
 	 * @throws javax.xml.parsers.ParserConfigurationException in case of problem.
 	 * @throws javax.xml.transform.TransformerException in case of problem.
 	 */
-	private void writing(File file, Configuration agrw) throws ParserConfigurationException, TransformerException {
+	private void writing(File file, Configuration conf) throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 		
 		Document doc = docBuilder.newDocument();
-		Comment coment = doc.createComment(agrw.getUserComment());
+		Comment coment = doc.createComment(conf.getUserComment());
 		doc.appendChild(coment);
 		Element rootElement = doc.createElement("ECF");
 		doc.appendChild(rootElement);
 		
-		if(!agrw.algorithms.isEmpty()){
+		if(!conf.algorithms.isEmpty()){
 			Element algorithms = doc.createElement("Algorithm");
-			algorithm(algorithms, doc, agrw);
+			algorithm(algorithms, doc, conf);
 			rootElement.appendChild(algorithms);
 		}
 		
 		
-		for (List<EntryBlock> gList : agrw.genotypes){
+		for (List<EntryBlock> gList : conf.genotypes){
 			if(!gList.isEmpty()){
 				Element genotypes = doc.createElement("Genotype");
 				genotype(genotypes, doc,gList);
@@ -75,9 +75,9 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 			}
 		}
 		
-		if(!agrw.registry.getEntryList().isEmpty()){
+		if(!conf.registry.getEntryList().isEmpty()){
 			Element registry = doc.createElement("Registry");
-			registry(registry, doc, agrw);
+			registry(registry, doc, conf);
 			rootElement.appendChild(registry);
 		}
 		
@@ -85,18 +85,16 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(file);
-		//StreamResult result = new StreamResult(System.out); //  For testing.
 		transformer.transform(source, result);
-		
 	}
 
 	/**
-	 * This method is used to write the {@link Registry} with given {@link org.w3c.dom.Document}.
+	 * This method is used to write the registry with given {@link org.w3c.dom.Document}.
 	 * @param registry {@link org.w3c.dom.Element} class to be written on the document.
 	 * @param doc document to be written on.
 	 */
-	private void registry(Element registry, Document doc, Configuration agrw) {
-		List<Entry> eList = agrw.registry.getEntryList();
+	private void registry(Element registry, Document doc, Configuration conf) {
+		List<Entry> eList = conf.registry.getEntryList();
 		for(int i=0; i<eList.size(); i++){
 			Entry e = eList.get(i);
 			Element entry = doc.createElement("Entry");
@@ -104,7 +102,6 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 			entry.setAttribute("desc", e.desc);
 			entry.appendChild(doc.createTextNode(e.value));
 			registry.appendChild(entry);
-			
 		}
 	}
 
@@ -127,7 +124,6 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 				entry.setAttribute("desc", e.desc);
 				entry.appendChild(doc.createTextNode(e.value));
 				genType.appendChild(entry);
-				
 			}
 			
 			genotypes.appendChild(genType);
@@ -140,9 +136,9 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 	 * @param algorithms algorithms {@link org.w3c.dom.Element} class to be written on the document.
 	 * @param doc document to be written on.
 	 */
-	private void algorithm(Element algorithms, Document doc, Configuration agrw) {
+	private void algorithm(Element algorithms, Document doc, Configuration conf) {
 		
-		List<EntryBlock> aList = agrw.algorithms;
+		List<EntryBlock> aList = conf.algorithms;
 		for(EntryBlock algorithm : aList){
 			Element algType = doc.createElement(algorithm.getName());
 			
@@ -154,7 +150,6 @@ public class XmlConfigurationWriter implements ConfigurationWriter {
 				entry.setAttribute("desc", e.desc);
 				entry.appendChild(doc.createTextNode(e.value));
 				algType.appendChild(entry);
-				
 			}
 			
 			algorithms.appendChild(algType);
