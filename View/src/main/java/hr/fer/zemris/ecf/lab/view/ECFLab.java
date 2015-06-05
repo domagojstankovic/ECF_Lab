@@ -373,8 +373,9 @@ public class ECFLab extends JFrame {
 			List<EntryBlock> algs = agru.algorithms;
 			for (EntryBlock alg : algs) {
 				List<Entry> entries = alg.getEntryList();
-				ps.getAlgSel().show(alg.getName());
-				EntryListPanel enp = ps.getAlgSel().getSelectedEntryList();
+				EntryBlockSelection<EntryBlock> algSel = ps.getAlgSel();
+				algSel.show(alg.getName());
+				EntryListPanel enp = algSel.getSelectedEntryList();
 				for (Entry entry : entries) {
 					EntryFieldPanel efp = enp.getEntryField(entry.key);
 					if (efp == null) {
@@ -384,15 +385,15 @@ public class ECFLab extends JFrame {
 						efp.setText(entry.value);
 					}
 				}
-				EntryBlockSelection<EntryBlock> algSel = ps.getAlgSel();
 				algSel.add();
 			}
 
 			List<EntryBlock> gens = agru.genotypes.get(0);
 			for (EntryBlock gen : gens) {
 				List<Entry> entries = gen.getEntryList();
-				ps.getGenSel().show(gen.getName());
-				EntryListPanel enp = ps.getGenSel().getSelectedEntryList();
+				EntryBlockSelection<EntryBlock> genSel = ps.getGenSel();
+				genSel.show(gen.getName());
+				EntryListPanel enp = genSel.getSelectedEntryList();
 				for (Entry entry : entries) {
 					EntryFieldPanel efp = enp.getEntryField(entry.key);
 					if (efp == null) {
@@ -402,7 +403,6 @@ public class ECFLab extends JFrame {
 						efp.setText(entry.value);
 					}
 				}
-				EntryBlockSelection<EntryBlock> genSel = ps.getGenSel();
 				genSel.add();
 			}
 
