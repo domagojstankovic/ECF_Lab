@@ -170,7 +170,7 @@ public class EntryFieldPanel extends JPanel {
 
 	@Override
 	public String toString() {
-		return label.getText();
+		return label.getText() + ": " + text.getText();
 	}
 	
 	public EntryFieldPanel copy() {
