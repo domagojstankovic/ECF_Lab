@@ -526,6 +526,7 @@ public class ECFLab extends JFrame {
 
 	private void exitConfirmed() {
 		dispose();
+		System.exit(0);
 	}
 
 	/**
@@ -550,8 +551,6 @@ public class ECFLab extends JFrame {
 
 		Logger logger = new FileLogger(settings.getValue(SettingsKey.LOG_FILE_PATH));
 		LoggerProvider.setLogger(logger);
-
-		logger.log("Proba");
 
 		ConfigurationService.getInstance().setReader(new XmlConfigurationReader());
 		ConfigurationService.getInstance().setWriter(new XmlConfigurationWriter());
