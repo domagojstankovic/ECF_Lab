@@ -43,6 +43,15 @@ public class EntryList {
         return entryList.get(index);
     }
 
+    public Entry getEntryWithKey(String key) {
+        for (Entry e : entryList) {
+            if (e.key.equals(key)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
