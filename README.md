@@ -5,23 +5,11 @@ ECF Lab is a platform independent app developed to simplify usage of the Evoluti
 
 -------------------------------------------------------
 
-Video demos
+Video demo
 
-Choose ECF executable file that represents optimization problem. (CLICK TO SEE VIDEO)
+See how to run a simple experiment using ECF Lab. (CLICK TO SEE VIDEO)
 
-[![Choose ECF executable file](https://img.youtube.com/vi/LiEPm6zqjYk/0.jpg)](https://www.youtube.com/watch?v=LiEPm6zqjYk)
-
-
-
-Configuration file contains vital information for the ECF engine. It describes algorithms and genotypes with associated parameters which will be used for evolutionary computation. With ECF Lab it is easy to read, update and save configuration files. (CLICK TO SEE VIDEO)
-
-[![Manipulate configuration file](https://img.youtube.com/vi/nK2oaa_m8aY/0.jpg)](https://www.youtube.com/watch?v=nK2oaa_m8aY)
-
-
-
-Run multiple experiments parallel and view results in a interactive environment. (CLICK TO SEE VIDEO)
-
-[![Run experiments](https://img.youtube.com/vi/kTcIjLp88yE/0.jpg)](https://www.youtube.com/watch?v=kTcIjLp88yE)
+[![Run experiment](https://img.youtube.com/vi/MPi82YXWcTU/0.jpg)](https://www.youtube.com/watch?v=MPi82YXWcTU&feature=youtu.be)
 
 
 -------------------------------------------------------
