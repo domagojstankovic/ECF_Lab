@@ -60,12 +60,17 @@ public class ExperimentsManager implements JobObserver {
                 jobs = new ArrayList<>(repeats);
                 int len = Integer.valueOf(repeats).toString().length();
                 Entry logFilenameEntry = Utils.findEntry(registryList, "log.filename");
-                String originalLogFilename = logFilenameEntry.value;
+                String originalLogFilename = null;
+                if (logFilenameEntry != null) {
+                    originalLogFilename = logFilenameEntry.value;
+                }
                 for (int i = 0; i < repeats; i++) {
                     // change configuration (log.filename) and write it to changed location
                     String currConfPath = confPath + ".part__" + (i + 1);
-                    String currLogFilename = Utils.addBeforeExtension(originalLogFilename, (i + 1), len);
-                    logFilenameEntry.value = currLogFilename;
+                    if (originalLogFilename != null) {
+                        String currLogFilename = Utils.addBeforeExtension(originalLogFilename, (i + 1), len);
+                        logFilenameEntry.value = currLogFilename;
+                    }
                     ConfigurationService.getInstance().getWriter().write(new File(currConfPath), conf);
 
                     Job job = new Job(ecfPath, currConfPath, true);
