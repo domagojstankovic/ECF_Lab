@@ -9,7 +9,6 @@ import java.io.IOException;
  * @version 1.0
  */
 public class Terminal extends AbstractConsole {
-
     @Override
     public void pardump(String ecfPath, String pardumpPath) {
         try {
@@ -21,7 +20,6 @@ public class Terminal extends AbstractConsole {
             System.err.println("Problem with writing to unix terminal.");
             e.printStackTrace();
         }
-
     }
 
     @Override

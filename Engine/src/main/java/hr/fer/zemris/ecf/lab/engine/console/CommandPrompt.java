@@ -9,7 +9,6 @@ import java.io.IOException;
  * @version 1.0
  */
 public class CommandPrompt extends AbstractConsole {
-
     @Override
     public void pardump(String ecfPath, String pardumpPath) {
 
@@ -36,5 +35,4 @@ public class CommandPrompt extends AbstractConsole {
         String cmd3 = "\"" + command + "\"";
         runProcess(job, "cmd.exe", "/c", cmd3);
     }
-
 }
