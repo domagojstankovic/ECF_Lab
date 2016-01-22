@@ -8,7 +8,6 @@ import java.io.IOException;
  * Created by Domagoj on 16/05/15.
  */
 public abstract class AbstractConsole implements Console {
-
     protected void runProcess(Job job, String... args) {
         try {
             job.started();
@@ -37,5 +36,4 @@ public abstract class AbstractConsole implements Console {
             System.out.println(str);
         }
     }
-
 }
