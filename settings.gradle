@@ -3,4 +3,5 @@ include 'Engine'
 include 'Model'
 
 include 'View'
+include 'ChartKit'
 
