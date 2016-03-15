@@ -61,4 +61,23 @@ public class Configuration {
         }
         return "There are no user comments for this parameters.";
     }
+
+    public Configuration copy() {
+        List<EntryBlock> newAlgorithms = copyEntryBlockList(algorithms);
+
+        List<List<EntryBlock>> newGenotypes = new ArrayList<>(1);
+        newGenotypes.add(copyEntryBlockList(genotypes.get(0)));
+
+        EntryList newRegistry = registry.copy();
+
+        return new Configuration(newAlgorithms, newGenotypes, newRegistry);
+    }
+
+    private static List<EntryBlock> copyEntryBlockList(List<EntryBlock> blocks) {
+        List<EntryBlock> entryBlocks = new ArrayList<>(blocks.size());
+        for (EntryBlock block : blocks) {
+            entryBlocks.add(block.copy());
+        }
+        return entryBlocks;
+    }
 }

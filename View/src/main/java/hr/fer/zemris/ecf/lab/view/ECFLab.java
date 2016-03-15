@@ -346,7 +346,10 @@ public class ECFLab extends JFrame {
 			File file = fc.getSelectedFile();
 			String path = file.getAbsolutePath();
 			ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
-			ConfigurationService.getInstance().getWriter().write(new File(path), ps.getParameters());
+			List<Configuration> configurations = ps.getParameters();
+			for (Configuration conf : configurations) {
+				ConfigurationService.getInstance().getWriter().write(new File(path), conf);
+			}
 			JOptionPane.showMessageDialog(this, "Saved under name: " + path, "Saved succesfully",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -359,7 +362,10 @@ public class ECFLab extends JFrame {
 	protected void saveConf() {
 		ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
 		String path = ps.getDefinePanel().getParamsPath();
-		ConfigurationService.getInstance().getWriter().write(new File(path), ps.getParameters());
+		List<Configuration> configurations = ps.getParameters();
+		for (Configuration conf : configurations) {
+			ConfigurationService.getInstance().getWriter().write(new File(path), conf);
+		}
 		tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), path);
 	}
 

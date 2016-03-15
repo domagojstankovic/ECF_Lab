@@ -61,4 +61,8 @@ public class Entry {
 		}
 		return str;
 	}
+
+	public Entry copy() {
+		return new Entry(key, desc, value);
+	}
 }

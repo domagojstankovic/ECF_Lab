@@ -2,12 +2,10 @@ package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 
 /**
  * List of {@link EntryFieldPanel} objects.
@@ -53,7 +51,7 @@ public class EntryListPanel extends JPanel {
 	 * @param index Index of specified {@link EntryFieldPanel}
 	 * @return Value from the text field on the specified index
 	 */
-	public String getValueAt(int index) {
+	public List<String> getValueAt(int index) {
 		return fieldPanels.get(index).getText();
 	}
 	
@@ -93,12 +91,12 @@ public class EntryListPanel extends JPanel {
 		return null;
 	}
 	
-	public List<Entry> getSelectedEntries() {
+	public List<MultiEntry> getSelectedEntries() {
 		int size = getEntriesCount();
-		List<Entry> entries = new ArrayList<>();
+		List<MultiEntry> entries = new ArrayList<>();
 		for (int i = 0; i < size; i++) {
 			if (isSelected(i)) {
-				entries.add(new Entry(getKeyAt(i), getDescriptionAt(i), getValueAt(i)));
+				entries.add(new MultiEntry(getKeyAt(i), getDescriptionAt(i), getValueAt(i)));
 			}
 		}
 		return entries;

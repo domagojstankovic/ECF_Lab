@@ -64,11 +64,11 @@ public class ParametersSelection extends JPanel {
      * are written to the log file under the specified path.
      */
     protected void runClicked() {
-        Configuration conf = getParameters();
+        List<Configuration> confs = getParameters();
         String ecfPath = InfoService.getEcfPath();
         String confPath = definePanel.getParamsPath();
         int threads = definePanel.getThreadsCount();
-        getProgressFrame().runExperiment(conf, ecfPath, confPath, threads);
+        getProgressFrame().runExperiment(confs, ecfPath, confPath, threads); // TODO
     }
 
     /**
@@ -78,38 +78,35 @@ public class ParametersSelection extends JPanel {
      * @return {@link Configuration} object containing all the selected
      * parameters
      */
-    public Configuration getParameters() {
+    public List<Configuration> getParameters() {
         // Algorithm filling
         List<EntryFieldDisplay<EntryBlock>> algList = algSel.getAddedEntries();
-        List<EntryBlock> algs = new ArrayList<>(algList.size());
+        List<MultiEntryBlock> algs = new ArrayList<>(algList.size());
         for (EntryFieldDisplay<EntryBlock> a : algList) {
-            algs.add(new EntryBlock(a.getBlock().getName(), a.getBlockDisplay().getSelectedEntries()));
+            algs.add(new MultiEntryBlock(a.getBlock().getName(), a.getBlockDisplay().getSelectedEntries()));
         }
 
         // Genotype filling
         List<EntryFieldDisplay<EntryBlock>> genList = genSel.getAddedEntries();
-        List<EntryBlock> gens = new ArrayList<>(genList.size());
+        List<MultiEntryBlock> gens = new ArrayList<>(genList.size());
         for (EntryFieldDisplay<EntryBlock> g : genList) {
-            gens.add(new EntryBlock(g.getBlock().getName(), g.getBlockDisplay().getSelectedEntries()));
+            gens.add(new MultiEntryBlock(g.getBlock().getName(), g.getBlockDisplay().getSelectedEntries()));
         }
-        List<List<EntryBlock>> genBlock = new ArrayList<>(1);
+        List<List<MultiEntryBlock>> genBlock = new ArrayList<>(1);
         genBlock.add(gens);
 
         // Registry filling
         int size = regList.getEntriesCount();
-        List<Entry> entries = new ArrayList<>();
+        List<MultiEntry> entries = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             if (regList.isSelected(i)) {
-                entries.add(new Entry(regList.getKeyAt(i), regList.getDescriptionAt(i), regList.getValueAt(i)));
+                entries.add(new MultiEntry(regList.getKeyAt(i), regList.getDescriptionAt(i), regList.getValueAt(i)));
             }
         }
-        EntryList reg = new EntryList(entries);
+        MultiEntryBlock reg = new MultiEntryBlock(null, entries);
 
-        Configuration temp = new Configuration();
-        temp.algorithms = algs;
-        temp.genotypes = genBlock;
-        temp.registry = reg;
-        return temp;
+        ConfigurationsCreator configurationsCreator = ConfigurationsCreatorFactory.create();
+        return configurationsCreator.createConfigurations(algs, genBlock, reg);
     }
 
     /**

@@ -60,4 +60,12 @@ public class EntryList {
         }
         return sb.toString();
     }
+
+    public EntryList copy() {
+        List<Entry> entries = new ArrayList<>(entryList.size());
+        for (Entry entry : entryList) {
+            entries.add(entry.copy());
+        }
+        return new EntryList(entries);
+    }
 }
