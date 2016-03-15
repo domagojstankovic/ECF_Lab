@@ -2,15 +2,16 @@ package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 
-import java.awt.Dimension;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Field for defining existence of specified parameter (check box), parameter
@@ -25,65 +26,118 @@ public class EntryFieldPanel extends JPanel {
 
 	private JCheckBox checkBox;
 	private JLabel label;
-	private JTextField text;
+	private JPanel textFieldsPanel;
+	private List<JTextField> textFields;
 	private boolean mandatory = false;
+	private String description;
 
 	/**
 	 * @param label Parameter name
-	 * @param text Parameter value
-	 * @param tooltipText Parameter description
+	 * @param textFields Parameter values
+	 * @param @param tooltipText Parameter description
 	 */
-	public EntryFieldPanel(JLabel label, JTextField text, String tooltipText) {
-		this(label, text, BoxLayout.X_AXIS, tooltipText);
+	public EntryFieldPanel(JLabel label, List<JTextField> textFields, String description) {
+		super();
+		this.label = label;
+		this.textFields = textFields;
+		this.description = description;
+
+		setup();
 	}
 
 	/**
-	 * @param label Parameter name
-	 * @param text Parameter value
-	 * @param axis List to be laid horizontally {@link javax.swing.BoxLayout}.X_AXIS or vertically {@link javax.swing.BoxLayout}.Y_AXIS
+	 * @param entry Entry to be displayed
 	 */
-	public EntryFieldPanel(JLabel label, JTextField text, int axis) {
+	public EntryFieldPanel(Entry entry) {
 		super();
-		this.label = label;
-		this.text = text;
+		this.label = new JLabel(entry.key);
+		this.textFields = new ArrayList<>(1);
+		this.textFields.add(new JTextField(entry.value));
+		this.description = entry.desc;
 
-		Dimension lblDim = new Dimension(130, 20);
-		Dimension txtDim = new Dimension(Integer.MAX_VALUE, 20);
+		setup();
+		boolean b = entry.isMandatory();
+		if (b) {
+			setMandatory();
+		}
+	}
 
-		label.setSize(lblDim);
+	private void setup() {
+		textFieldsPanel = new JPanel();
+		textFieldsPanel.setLayout(new BoxLayout(textFieldsPanel, BoxLayout.Y_AXIS));
+		label.setToolTipText(description);
+
+		Dimension lblDim = new Dimension(130, 50);
+		Dimension txtDim = new Dimension(Integer.MAX_VALUE, 50);
+
 		label.setPreferredSize(lblDim);
 		label.setMaximumSize(lblDim);
 		label.setMinimumSize(lblDim);
 
-		text.setSize(lblDim);
-		text.setPreferredSize(lblDim);
-		text.setMaximumSize(txtDim);
-		text.setMinimumSize(lblDim);
+		textFieldsPanel.setPreferredSize(lblDim);
+		textFieldsPanel.setMaximumSize(txtDim);
+		textFieldsPanel.setMinimumSize(lblDim);
 
-		setLayout(new BoxLayout(this, axis));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		checkBox = new JCheckBox();
 		checkBox.setSelected(false);
 
-		text.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				textUpdated();
-			}
+		for (JTextField field : this.textFields) {
+			field.getDocument().addDocumentListener(new DocumentListener() {
+				@Override
+				public void insertUpdate(DocumentEvent e) {
+					textUpdated();
+				}
 
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				textUpdated();
-			}
+				@Override
+				public void removeUpdate(DocumentEvent e) {
+					textUpdated();
+				}
 
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				textUpdated();
-			}
-		});
+				@Override
+				public void changedUpdate(DocumentEvent e) {
+					textUpdated();
+				}
+			});
+		}
 
 		add(checkBox);
 		add(label);
-		add(text);
+		for (JTextField textField : textFields) {
+			textFieldsPanel.add(textField);
+		}
+		add(textFieldsPanel);
+
+		this.label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				super.mousePressed(e);
+				if (e.isPopupTrigger()) {
+					doPop(e);
+				}
+			}
+
+			private void doPop(MouseEvent e) {
+				List<AbstractAction> actions = new LinkedList<>();
+				actions.add(new AbstractAction("Add") {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// Add action
+						addTextField();
+					}
+				});
+
+				PopUpMenu menu = new PopUpMenu(actions);
+				menu.show(e.getComponent(), e.getX(), e.getY());
+			}
+		});
+	}
+
+	private void addTextField() {
+		JTextField textField = new JTextField("");
+		textFields.add(textField);
+		textFieldsPanel.add(textField);
+		revalidate();
 	}
 
 	private void textUpdated() {
@@ -91,39 +145,21 @@ public class EntryFieldPanel extends JPanel {
 	}
 
 	/**
-	 * @param entry Entry to be displayed
-	 */
-	public EntryFieldPanel(Entry entry) {
-		this(new JLabel(entry.key), new JTextField(entry.value), entry.desc);
-		boolean b = entry.isMandatory();
-		if (b) {
-			setMandatory();
-		}
-	}
-
-	/**
-	 * @param label Parameter name
-	 * @param text Parameter value
-	 * @param axis List to be laid horizontally {@link javax.swing.BoxLayout}.X_AXIS or vertically {@link javax.swing.BoxLayout}.Y_AXIS
-	 * @param tooltipText Parameter description
-	 */
-	public EntryFieldPanel(JLabel label, JTextField text, int axis, String tooltipText) {
-		this(label, text, axis);
-		label.setToolTipText(tooltipText);
-	}
-
-	/**
 	 * @return Text from the text field
 	 */
-	public String getText() {
-		return text.getText();
+	public List<String> getText() {
+		List<String> list = new ArrayList<>(textFields.size());
+		for (JTextField textField : textFields) {
+			list.add(textField.getText());
+		}
+		return list;
 	}
 
 	/**
 	 * @param text Text to be set in the text field
 	 */
 	public void setText(String text) {
-		this.text.setText(text);
+		this.textFields.get(0).setText(text);
 	}
 
 	/**
@@ -131,13 +167,6 @@ public class EntryFieldPanel extends JPanel {
 	 */
 	public String getLabelText() {
 		return label.getText();
-	}
-
-	/**
-	 * @param text Name of the parameter
-	 */
-	public void setLabelText(String text) {
-		label.setText(text);
 	}
 
 	/**
@@ -155,7 +184,7 @@ public class EntryFieldPanel extends JPanel {
 	}
 	
 	public String getDescription() {
-		return text.getToolTipText();
+		return label.getToolTipText();
 	}
 	
 	public boolean isMandatory() {
@@ -170,11 +199,20 @@ public class EntryFieldPanel extends JPanel {
 
 	@Override
 	public String toString() {
-		return label.getText() + ": " + text.getText();
+		StringBuilder sb = new StringBuilder(label.getText());
+		sb.append(": ");
+		for (JTextField textField : textFields) {
+			sb.append(textField.getText()).append(" ");
+		}
+		return sb.toString();
 	}
 	
 	public EntryFieldPanel copy() {
-		EntryFieldPanel efp = new EntryFieldPanel(new JLabel(getLabelText()), new JTextField(getText()), getDescription());
+		List<JTextField> list = new ArrayList<>(textFields.size());
+		for (JTextField field : textFields) {
+			list.add(new JTextField(field.getText()));
+		}
+		EntryFieldPanel efp = new EntryFieldPanel(new JLabel(getLabelText()), list, getDescription());
 		efp.setSelected(isSelected());
 		if (isMandatory()) {
 			efp.setMandatory();
@@ -182,4 +220,13 @@ public class EntryFieldPanel extends JPanel {
 		return efp;
 	}
 
+	private static class PopUpMenu extends JPopupMenu {
+		public PopUpMenu(List<AbstractAction> actions) {
+			super();
+			for (AbstractAction action : actions) {
+				JMenuItem item = new JMenuItem(action);
+				add(item);
+			}
+		}
+	}
 }

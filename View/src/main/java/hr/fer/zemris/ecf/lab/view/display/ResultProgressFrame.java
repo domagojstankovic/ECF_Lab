@@ -5,15 +5,13 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.task.ExperimentsManager;
 import hr.fer.zemris.ecf.lab.engine.task.JobListener;
-import hr.fer.zemris.ecf.lab.view.layout.ListFrame;
 import hr.fer.zemris.ecf.lab.view.layout.TextButtonListFrame;
 
-import java.awt.*;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.swing.*;
 
 /**
  * Frame that displays list of all results that have been generated. This frame
@@ -38,11 +36,14 @@ public class ResultProgressFrame extends TextButtonListFrame implements JobListe
         manager = new ExperimentsManager(this);
     }
 
-    public void runExperiment(Configuration conf, String ecfPath, String confPath, int threads) {
+    public void runExperiment(List<Configuration> confs, String ecfPath, String confPath, int threads) {
         panel.removeAll();
         panelMap.clear();
         logMap.clear();
-        manager.runExperiment(conf, ecfPath, confPath, threads);
+        for (Configuration conf : confs) {
+            // TODO change confPath and log path
+            manager.runExperiment(conf, ecfPath, confPath, threads);
+        }
         setVisible(true);
     }
 

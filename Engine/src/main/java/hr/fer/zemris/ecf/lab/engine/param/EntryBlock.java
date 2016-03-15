@@ -1,5 +1,6 @@
 package hr.fer.zemris.ecf.lab.engine.param;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EntryBlock extends EntryList {
@@ -65,5 +66,13 @@ public class EntryBlock extends EntryList {
 	@Override
 	public String toString() {
 		return name + "\n" + entryList.toString();
+	}
+
+	public EntryBlock copy() {
+		List<Entry> entries = new ArrayList<>(entryList.size());
+		for (Entry entry : entryList) {
+			entries.add(entry.copy());
+		}
+		return new EntryBlock(name, entries);
 	}
 }
