@@ -3,8 +3,10 @@ package hr.fer.zemris.ecf.lab.view.layout;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 import hr.fer.zemris.ecf.lab.engine.param.EntryBlock;
+import hr.fer.zemris.ecf.lab.model.util.Pair;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,9 +24,9 @@ public class DefaultConfigurationsCreator implements ConfigurationsCreator {
   }
 
   @Override
-  public List<Configuration> createConfigurations(List<MultiEntryBlock> algorithmList,
-                                                  List<List<MultiEntryBlock>> genotypeListBlock,
-                                                  MultiEntryBlock registry) {
+  public List<Pair<Configuration, List<Pair<String, String>>>> createConfigurations(List<MultiEntryBlock> algorithmList,
+                                                                                    List<List<MultiEntryBlock>> genotypeListBlock,
+                                                                                    MultiEntryBlock registry) {
     List<EntryPair> multiEntryPairs = new ArrayList<>();
 
     Configuration configuration = createTemplateConfiguration(
@@ -34,19 +36,27 @@ public class DefaultConfigurationsCreator implements ConfigurationsCreator {
     return createAllConfigurations(configuration, multiEntryPairs);
   }
 
-  private static List<Configuration> createAllConfigurations(Configuration configuration,
-                                                             List<EntryPair> multiEntryPairs) {
-    List<Configuration> configurations = new ArrayList<>();
-    solve(configurations, configuration, multiEntryPairs, 0);
+  private static List<Pair<Configuration, List<Pair<String, String>>>> createAllConfigurations(
+      Configuration configuration,
+      List<EntryPair> multiEntryPairs) {
+
+    List<Pair<Configuration, List<Pair<String, String>>>> configurations = new ArrayList<>();
+    solve(configurations, configuration, multiEntryPairs, new LinkedList<>(), 0);
     return configurations;
   }
 
-  private static void solve(List<Configuration> configurations,
+  private static void solve(List<Pair<Configuration, List<Pair<String, String>>>> configurations,
                             Configuration configuration,
                             List<EntryPair> multiEntryPairs,
+                            List<Pair<String, String>> descriptors,
                             int index) {
     if (index >= multiEntryPairs.size()) {
-      configurations.add(configuration.copy());
+      Configuration config = configuration.copy();
+      List<Pair<String, String>> descriptorList = new ArrayList<>(descriptors.size());
+      for (Pair<String, String> desc : descriptors) {
+        descriptorList.add(desc.shallowCopy());
+      }
+      configurations.add(new Pair<>(config, descriptorList));
       return;
     }
     EntryPair pair = multiEntryPairs.get(index);
@@ -54,7 +64,9 @@ public class DefaultConfigurationsCreator implements ConfigurationsCreator {
     for (String value : values) {
       Entry entry = pair.entry;
       entry.value = value;
-      solve(configurations, configuration, multiEntryPairs, index + 1);
+      descriptors.add(new Pair<>(pair.multiEntry.key, value));
+      solve(configurations, configuration, multiEntryPairs, descriptors, index + 1);
+      descriptors.remove(descriptors.size() - 1);
     }
   }
 

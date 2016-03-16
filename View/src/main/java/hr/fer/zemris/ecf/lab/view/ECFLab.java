@@ -15,6 +15,8 @@ import hr.fer.zemris.ecf.lab.model.settings.Settings;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsKey;
 import hr.fer.zemris.ecf.lab.model.settings.SettingsProvider;
 import hr.fer.zemris.ecf.lab.model.settings.impl.PropertyClassloaderSettings;
+import hr.fer.zemris.ecf.lab.model.util.DescriptorUtils;
+import hr.fer.zemris.ecf.lab.model.util.Pair;
 import hr.fer.zemris.ecf.lab.view.display.BrowsePanel;
 import hr.fer.zemris.ecf.lab.view.display.FrameDisplayer;
 import hr.fer.zemris.ecf.lab.view.display.LogDisplayer;
@@ -346,10 +348,8 @@ public class ECFLab extends JFrame {
 			File file = fc.getSelectedFile();
 			String path = file.getAbsolutePath();
 			ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
-			List<Configuration> configurations = ps.getParameters();
-			for (Configuration conf : configurations) {
-				ConfigurationService.getInstance().getWriter().write(new File(path), conf);
-			}
+			List<Pair<Configuration, List<Pair<String, String>>>> configurations = ps.getParameters();
+			saveConfigurations(configurations, path);
 			JOptionPane.showMessageDialog(this, "Saved under name: " + path, "Saved succesfully",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -362,11 +362,24 @@ public class ECFLab extends JFrame {
 	protected void saveConf() {
 		ParametersSelection ps = (ParametersSelection) tabbedPane.getSelectedComponent();
 		String path = ps.getDefinePanel().getParamsPath();
-		List<Configuration> configurations = ps.getParameters();
-		for (Configuration conf : configurations) {
-			ConfigurationService.getInstance().getWriter().write(new File(path), conf);
-		}
+		List<Pair<Configuration, List<Pair<String, String>>>> configurations = ps.getParameters();
+		saveConfigurations(configurations, path);
 		tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), path);
+	}
+
+	private static void saveConfigurations(List<Pair<Configuration, List<Pair<String, String>>>> configurations,
+																				 String path) {
+
+		if (configurations.size() == 1) {
+			ConfigurationService.getInstance().getWriter().write(new File(path), configurations.get(0).getFirst());
+		} else {
+			for (Pair<Configuration, List<Pair<String, String>>> pair : configurations) {
+				Configuration conf = pair.getFirst();
+				String desc = DescriptorUtils.mergeDescriptor(pair.getSecond());
+				String newPath = DescriptorUtils.modifiedString(path, desc);
+				ConfigurationService.getInstance().getWriter().write(new File(newPath), conf);
+			}
+		}
 	}
 
 	protected void openConf() {

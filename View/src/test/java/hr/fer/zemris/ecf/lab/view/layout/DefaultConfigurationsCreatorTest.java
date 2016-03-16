@@ -1,6 +1,7 @@
 package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
+import hr.fer.zemris.ecf.lab.model.util.Pair;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,10 +29,12 @@ public class DefaultConfigurationsCreatorTest {
 
     MultiEntryBlock registry = createMultiEntryBlock("reg", 1, 1, 3, 1);
 
-    List<Configuration> configurations = creator.createConfigurations(algorithmList, genotypeListBlock, registry);
+    List<Pair<Configuration, List<Pair<String, String>>>> configurations =
+        creator.createConfigurations(algorithmList, genotypeListBlock, registry);
     Assert.assertTrue(configurations.size() == 12);
 
-    for (Configuration conf : configurations) {
+    for (Pair<Configuration, List<Pair<String, String>>> pair : configurations) {
+      Configuration conf = pair.getFirst();
       Assert.assertTrue(conf.algorithms.size() == 1);
       Assert.assertTrue(conf.algorithms.get(0).getEntryList().size() == 2);
       Assert.assertTrue(conf.algorithms.get(0).getEntryAt(0).value.equals("alg-A-1 1"));
