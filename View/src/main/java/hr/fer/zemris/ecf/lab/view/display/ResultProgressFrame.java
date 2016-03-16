@@ -3,8 +3,11 @@ package hr.fer.zemris.ecf.lab.view.display;
 import hr.fer.zemris.ecf.lab.engine.console.Job;
 import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
+import hr.fer.zemris.ecf.lab.engine.param.Entry;
 import hr.fer.zemris.ecf.lab.engine.task.ExperimentsManager;
 import hr.fer.zemris.ecf.lab.engine.task.JobListener;
+import hr.fer.zemris.ecf.lab.model.util.DescriptorUtils;
+import hr.fer.zemris.ecf.lab.model.util.Pair;
 import hr.fer.zemris.ecf.lab.view.layout.TextButtonListFrame;
 
 import javax.swing.*;
@@ -36,13 +39,29 @@ public class ResultProgressFrame extends TextButtonListFrame implements JobListe
         manager = new ExperimentsManager(this);
     }
 
-    public void runExperiment(List<Configuration> confs, String ecfPath, String confPath, int threads) {
+    public void runExperiment(List<Pair<Configuration, List<Pair<String, String>>>> confs,
+                              String ecfPath,
+                              String confPath,
+                              int threads) {
         panel.removeAll();
         panelMap.clear();
         logMap.clear();
-        for (Configuration conf : confs) {
-            // TODO change confPath and log path
-            manager.runExperiment(conf, ecfPath, confPath, threads);
+        if (confs.size() == 1) {
+            manager.runExperiment(confs.get(0).getFirst(), ecfPath, confPath, threads);
+        } else {
+            for (Pair<Configuration, List<Pair<String, String>>> confDesc : confs) {
+                // change confPath and log path
+                Configuration conf = confDesc.getFirst();
+                String desc = DescriptorUtils.mergeDescriptor(confDesc.getSecond());
+
+                String newConfPath = DescriptorUtils.modifiedString(confPath, desc);
+                Entry logEntry = conf.registry.getEntryWithKey("log.filename");
+                if (logEntry != null) {
+                    logEntry.value = DescriptorUtils.modifiedString(logEntry.value != null ? logEntry.value : "", desc);
+                }
+
+                manager.runExperiment(conf, ecfPath, newConfPath, threads);
+            }
         }
         setVisible(true);
     }

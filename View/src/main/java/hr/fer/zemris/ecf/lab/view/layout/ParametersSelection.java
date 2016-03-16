@@ -2,6 +2,7 @@ package hr.fer.zemris.ecf.lab.view.layout;
 
 import hr.fer.zemris.ecf.lab.engine.param.*;
 import hr.fer.zemris.ecf.lab.model.info.InfoService;
+import hr.fer.zemris.ecf.lab.model.util.Pair;
 import hr.fer.zemris.ecf.lab.view.display.ResultProgressFrame;
 
 import javax.swing.*;
@@ -64,11 +65,11 @@ public class ParametersSelection extends JPanel {
      * are written to the log file under the specified path.
      */
     protected void runClicked() {
-        List<Configuration> confs = getParameters();
+        List<Pair<Configuration, List<Pair<String, String>>>> confs = getParameters();
         String ecfPath = InfoService.getEcfPath();
         String confPath = definePanel.getParamsPath();
         int threads = definePanel.getThreadsCount();
-        getProgressFrame().runExperiment(confs, ecfPath, confPath, threads); // TODO
+        getProgressFrame().runExperiment(confs, ecfPath, confPath, threads);
     }
 
     /**
@@ -78,7 +79,7 @@ public class ParametersSelection extends JPanel {
      * @return {@link Configuration} object containing all the selected
      * parameters
      */
-    public List<Configuration> getParameters() {
+    public List<Pair<Configuration, List<Pair<String, String>>>> getParameters() {
         // Algorithm filling
         List<EntryFieldDisplay<EntryBlock>> algList = algSel.getAddedEntries();
         List<MultiEntryBlock> algs = new ArrayList<>(algList.size());
