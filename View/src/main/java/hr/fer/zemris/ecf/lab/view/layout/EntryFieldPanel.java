@@ -23,6 +23,7 @@ import java.util.List;
 public class EntryFieldPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	private static final int TEXT_FIELD_WIDTH = 130;
 
 	private JCheckBox checkBox;
 	private JLabel label;
@@ -32,17 +33,21 @@ public class EntryFieldPanel extends JPanel {
 	private String description;
 
 	/**
-	 * @param label Parameter name
-	 * @param textFields Parameter values
+	 * @param label Entry name label
+	 * @param textFields Text fields to be added
+	 * @param description Entry description
 	 * @param @param tooltipText Parameter description
 	 */
 	public EntryFieldPanel(JLabel label, List<JTextField> textFields, String description) {
 		super();
 		this.label = label;
-		this.textFields = textFields;
+		this.textFields = new ArrayList<>(textFields.size());
 		this.description = description;
 
 		setup();
+		for (JTextField textField : textFields) {
+			addTextField(textField);
+		}
 	}
 
 	/**
@@ -52,10 +57,10 @@ public class EntryFieldPanel extends JPanel {
 		super();
 		this.label = new JLabel(entry.key);
 		this.textFields = new ArrayList<>(1);
-		this.textFields.add(new JTextField(entry.value));
 		this.description = entry.desc;
 
 		setup();
+		addTextField(entry.value);
 		boolean b = entry.isMandatory();
 		if (b) {
 			setMandatory();
@@ -63,49 +68,44 @@ public class EntryFieldPanel extends JPanel {
 	}
 
 	private void setup() {
-		textFieldsPanel = new JPanel();
+		textFieldsPanel = new JPanel() {
+			@Override
+			public Dimension getPreferredSize() {
+				int height = 0;
+				for (Component comp : this.getComponents()) {
+					height += comp.getPreferredSize().getHeight();
+				}
+				return new Dimension(TEXT_FIELD_WIDTH, height);
+			}
+
+			@Override
+			public Dimension getSize() {
+				Dimension superSize = super.getSize();
+				int height = 0;
+				for (Component comp : this.getComponents()) {
+					height += comp.getPreferredSize().getHeight();
+				}
+				return new Dimension((int)superSize.getWidth(), height);
+			}
+		};
 		textFieldsPanel.setLayout(new BoxLayout(textFieldsPanel, BoxLayout.Y_AXIS));
 		label.setToolTipText(description);
 
-		Dimension lblDim = new Dimension(130, 50);
-		Dimension txtDim = new Dimension(Integer.MAX_VALUE, 50);
+		Dimension lblDim = new Dimension(TEXT_FIELD_WIDTH, 20);
 
 		label.setPreferredSize(lblDim);
 		label.setMaximumSize(lblDim);
 		label.setMinimumSize(lblDim);
 
-		textFieldsPanel.setPreferredSize(lblDim);
-		textFieldsPanel.setMaximumSize(txtDim);
+		textFieldsPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 		textFieldsPanel.setMinimumSize(lblDim);
 
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		checkBox = new JCheckBox();
 		checkBox.setSelected(false);
 
-		for (JTextField field : this.textFields) {
-			field.getDocument().addDocumentListener(new DocumentListener() {
-				@Override
-				public void insertUpdate(DocumentEvent e) {
-					textUpdated();
-				}
-
-				@Override
-				public void removeUpdate(DocumentEvent e) {
-					textUpdated();
-				}
-
-				@Override
-				public void changedUpdate(DocumentEvent e) {
-					textUpdated();
-				}
-			});
-		}
-
 		add(checkBox);
 		add(label);
-		for (JTextField textField : textFields) {
-			textFieldsPanel.add(textField);
-		}
 		add(textFieldsPanel);
 
 		this.label.addMouseListener(new MouseAdapter() {
@@ -123,7 +123,7 @@ public class EntryFieldPanel extends JPanel {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// Add action
-						addTextField();
+						addTextField("");
 					}
 				});
 
@@ -133,10 +133,89 @@ public class EntryFieldPanel extends JPanel {
 		});
 	}
 
-	private void addTextField() {
-		JTextField textField = new JTextField("");
+	@Override
+	public void setBackground(Color bg) {
+		super.setBackground(bg);
+		if (textFieldsPanel != null) {
+			textFieldsPanel.setBackground(bg);
+		}
+	}
+
+	@Override
+	public Dimension getMaximumSize() {
+		return new Dimension((int)super.getMaximumSize().getWidth(), (int)getMinimumSize().getHeight());
+	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		int maxHeight = 0;
+		for (Component comp : this.getComponents()) {
+			int currH = (int)comp.getPreferredSize().getHeight();
+			if (currH > maxHeight) {
+				maxHeight = currH;
+			}
+		}
+		return new Dimension((int) super.getSize().getWidth(), maxHeight);
+	}
+
+	private void addTextField(String value) {
+		addTextField(new JTextField(value));
+	}
+
+	private void addTextField(JTextField textField) {
 		textFields.add(textField);
 		textFieldsPanel.add(textField);
+		Dimension dim = new Dimension(TEXT_FIELD_WIDTH, 20);
+		textField.setMinimumSize(dim);
+		textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+		textField.setPreferredSize(dim);
+
+		textField.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				super.mousePressed(e);
+				if (e.isPopupTrigger()) {
+					doPop(e, textField, textFields);
+				}
+			}
+
+			private void doPop(MouseEvent e, JTextField textField, List<JTextField> textFields) {
+				if (textFields.size() > 1) {
+					List<AbstractAction> actions = new LinkedList<>();
+					actions.add(new AbstractAction("Remove") {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							// Remove action
+							Container parent = textField.getParent();
+							parent.remove(textField);
+							textFields.remove(textField);
+							parent.revalidate();
+						}
+					});
+
+					PopUpMenu menu = new PopUpMenu(actions);
+					menu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		});
+
+		textField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				textUpdated();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				textUpdated();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				textUpdated();
+			}
+		});
+
 		revalidate();
 	}
 
