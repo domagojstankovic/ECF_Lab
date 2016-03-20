@@ -3,12 +3,11 @@ package hr.fer.zemris.ecf.lab.engine.log.reader;
 import hr.fer.zemris.ecf.lab.engine.log.ExperimentRun;
 import hr.fer.zemris.ecf.lab.engine.log.Generation;
 import hr.fer.zemris.ecf.lab.engine.log.LogModel;
-import org.junit.*;
 import org.junit.Test;
 
 import java.io.FileInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Domagoj on 02/05/15.
@@ -65,5 +64,15 @@ public class DefaultLogReaderTest {
         assertTrue("Generation 50 id bug", gen50.id == 50);
         assertTrue("Generation 50 population exists", gen50.population == null);
         assertTrue("Generation 50 deme avg error", Math.abs(gen50.demes.get(0).stats.avg - 19.8333) < 1e-9);
+    }
+
+    @Test
+    public void testNanAndInf() throws Exception {
+        DefaultLogReader reader = new DefaultLogReader();
+        LogModel log = reader.read(new FileInputStream("res/test/log3.txt"));
+        assertTrue(Double.isNaN(log.getRuns().get(0).getGenerations().get(0).demes.get(3).stats.avg));
+        assertTrue(log.getRuns().get(0).getGenerations().get(0).demes.get(4).stats.stdev == Double.POSITIVE_INFINITY);
+        assertTrue(log.getRuns().get(0).getGenerations().get(0).population.stats.max == Double.NEGATIVE_INFINITY);
+        assertTrue(log.getRuns().get(0).getGenerations().get(0).population.stats.min == Double.NEGATIVE_INFINITY);
     }
 }
