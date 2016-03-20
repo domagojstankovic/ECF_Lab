@@ -4,7 +4,6 @@ import hr.fer.zemris.ecf.lab.engine.log.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
@@ -188,23 +187,57 @@ public class DefaultLogReader implements LogReader {
                     invalidateLine();
                     break;
                 }
+                String strVal = extractValue(line);
                 if (line.startsWith(MAX_PREFIX)) {
-                    stats.max = Double.parseDouble(extractValue(line));
-                    invalidateLine();
+                    try {
+                        stats.max = Double.parseDouble(strVal);
+                    } catch (NumberFormatException e) {
+                        stats.max = extractNanOrInfinity(strVal);
+                    } finally {
+                        invalidateLine();
+                    }
                 } else if (line.startsWith(MIN_PREFIX)) {
-                    stats.min = Double.parseDouble(extractValue(line));
-                    invalidateLine();
+                    try {
+                        stats.min = Double.parseDouble(strVal);
+                    } catch (NumberFormatException e) {
+                        stats.min = extractNanOrInfinity(strVal);
+                    } finally {
+                        invalidateLine();
+                    }
                 } else if (line.startsWith(AVG_PREFIX)) {
-                    stats.avg = Double.parseDouble(extractValue(line));
-                    invalidateLine();
+                    try {
+                        stats.avg = Double.parseDouble(strVal);
+                    } catch (NumberFormatException e) {
+                        stats.avg = extractNanOrInfinity(strVal);
+                    } finally {
+                        invalidateLine();
+                    }
                 } else if (line.startsWith(STDEV_PREFIX)) {
-                    stats.stdev = Double.parseDouble(extractValue(line));
-                    invalidateLine();
+                    try {
+                        stats.stdev = Double.parseDouble(strVal);
+                    } catch (NumberFormatException e) {
+                        stats.stdev = extractNanOrInfinity(strVal);
+                    } finally {
+                        invalidateLine();
+                    }
                 } else {
                     break;
                 }
             }
             return stats;
+        }
+
+        private static double extractNanOrInfinity(String strVal) {
+            String lowStr = strVal.toLowerCase();
+            if ("nan".equals(lowStr)) {
+                return Double.NaN;
+            } else if ("inf".equals(lowStr)) {
+                return Double.POSITIVE_INFINITY;
+            } else if ("-inf".equals(lowStr) || "- inf".equals(lowStr)) {
+                return Double.NEGATIVE_INFINITY;
+            } else {
+                throw new NumberFormatException();
+            }
         }
 
         private static String extractValue(String str) {
