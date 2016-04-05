@@ -29,4 +29,12 @@ public class Terminal extends AbstractConsole {
         print(programPath + " " + args);
         runProcess(job, programPath, args);
     }
+
+    @Override
+    public void execute(Job job, File stdoutFile, File stderrFile) {
+        String programPath = job.getEcfPath();
+        String args = job.getConfigPath();
+        print(programPath + " " + args);
+        runProcess(job, stdoutFile, stderrFile, programPath, args);
+    }
 }
