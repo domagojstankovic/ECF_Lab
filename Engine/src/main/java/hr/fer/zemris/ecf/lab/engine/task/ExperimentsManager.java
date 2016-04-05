@@ -2,22 +2,17 @@ package hr.fer.zemris.ecf.lab.engine.task;
 
 import hr.fer.zemris.ecf.lab.engine.conf.ConfigurationService;
 import hr.fer.zemris.ecf.lab.engine.console.Job;
-import hr.fer.zemris.ecf.lab.engine.console.JobObserver;
-import hr.fer.zemris.ecf.lab.engine.console.ProcessOutput;
-import hr.fer.zemris.ecf.lab.engine.log.LogModel;
-import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
 import hr.fer.zemris.ecf.lab.engine.param.Entry;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Domagoj on 03/05/15.
  */
-public class ExperimentsManager implements JobObserver {
+public class ExperimentsManager {
 
   private boolean daemon = false;
   private JobListener listener;
@@ -26,7 +21,7 @@ public class ExperimentsManager implements JobObserver {
     this.listener = listener;
   }
 
-  public void runExperiment(Configuration conf, String ecfPath, String confPath, int threads) {
+  public void runExperiment(Configuration conf, String ecfPath, String confPath, int threads, boolean online) {
     try {
       boolean implicitParallelism = false;
       int repeats = 1;
@@ -101,7 +96,7 @@ public class ExperimentsManager implements JobObserver {
       ConfigurationService.getInstance().getWriter().write(new File(currConfPath), conf);
 
       Job job = new Job(ecfPath, currConfPath, true);
-      job.setObserver(this);
+      job.setObserver(new OfflineExperimentHandler(listener));
       jobs.add(job);
     }
 
@@ -111,7 +106,7 @@ public class ExperimentsManager implements JobObserver {
   private List<Job> createSerialJob(String ecfPath, String confPath) {
     List<Job> jobs = new ArrayList<>(1);
     Job job = new Job(ecfPath, confPath);
-    job.setObserver(this);
+    job.setObserver(new OfflineExperimentHandler(listener));
     jobs.add(job);
 
     return jobs;
@@ -131,36 +126,6 @@ public class ExperimentsManager implements JobObserver {
 
     t.setDaemon(daemon);
     t.start();
-  }
-
-  @Override
-  public void jobStarted(Job job) {
-    listener.jobStarted(job);
-  }
-
-  @Override
-  public void jobFinished(Job job, ProcessOutput output) {
-    deleteConfIfNeeded(job);
-    InputStream is = output.getStdout();
-    LogModel log = LogReaderProvider.getReader().read(is);
-    listener.jobFinished(job, log);
-  }
-
-  @Override
-  public void jobFailed(Job job) {
-    deleteConfIfNeeded(job);
-    listener.jobFailed(job);
-  }
-
-  private void deleteConfIfNeeded(Job job) {
-    if (job.shouldDeleteConf()) {
-      // job was created with implicit parallelism, delete configuration file
-      String confPath = job.getConfigPath();
-      File configFile = new File(confPath);
-      if (configFile.exists()) {
-        configFile.delete();
-      }
-    }
   }
 
   public void setDaemon(boolean daemon) {
