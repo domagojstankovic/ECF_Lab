@@ -24,93 +24,103 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ResultProgressFrame extends TextButtonListFrame implements JobListener {
 
-    private static final long serialVersionUID = 1L;
-    private static final String INITIALIZED = "Initialized";
-    private static final String STARTED = "Started";
-    private static final String FINISHED = "Finished";
-    private static final String FAILED = "Failed";
+  private static final long serialVersionUID = 1L;
+  private static final String INITIALIZED = "Initialized";
+  private static final String STARTED = "Started";
+  private static final String RUNNING = "Running";
+  private static final String FINISHED = "Finished";
+  private static final String FAILED = "Failed";
 
-    private ExperimentsManager manager;
-    private Map<Job, TextButtonPanel> panelMap = new ConcurrentHashMap<>();
-    private Map<Job, LogModel> logMap = new ConcurrentHashMap<>();
+  private ExperimentsManager manager;
+  private Map<Job, TextButtonPanel> panelMap = new ConcurrentHashMap<>();
+  private Map<Job, LogModel> logMap = new ConcurrentHashMap<>();
 
-    public ResultProgressFrame() {
-        super("Results");
-        manager = new ExperimentsManager(this);
-    }
+  public ResultProgressFrame() {
+    super("Results");
+    manager = new ExperimentsManager(this);
+  }
 
-    public void runExperiment(List<Pair<Configuration, List<Pair<String, String>>>> confs,
-                              String ecfPath,
-                              String confPath,
-                              int threads) {
-        panel.removeAll();
-        panelMap.clear();
-        logMap.clear();
-        if (confs.size() == 1) {
-            manager.runExperiment(confs.get(0).getFirst(), ecfPath, confPath, threads);
-        } else {
-            for (Pair<Configuration, List<Pair<String, String>>> confDesc : confs) {
-                // change confPath and log path
-                Configuration conf = confDesc.getFirst();
-                String desc = DescriptorUtils.mergeDescriptor(confDesc.getSecond());
+  public void runExperiment(List<Pair<Configuration, List<Pair<String, String>>>> confs,
+                            String ecfPath,
+                            String confPath,
+                            int threads) {
+    panel.removeAll();
+    panelMap.clear();
+    logMap.clear();
+    if (confs.size() == 1) {
+      manager.runExperiment(confs.get(0).getFirst(), ecfPath, confPath, threads, false);
+    } else {
+      for (Pair<Configuration, List<Pair<String, String>>> confDesc : confs) {
+        // change confPath and log path
+        Configuration conf = confDesc.getFirst();
+        String desc = DescriptorUtils.mergeDescriptor(confDesc.getSecond());
 
-                String newConfPath = DescriptorUtils.modifiedString(confPath, desc);
-                Entry logEntry = conf.registry.getEntryWithKey("log.filename");
-                if (logEntry != null) {
-                    logEntry.value = DescriptorUtils.modifiedString(logEntry.value != null ? logEntry.value : "", desc);
-                }
-
-                manager.runExperiment(conf, ecfPath, newConfPath, threads);
-            }
+        String newConfPath = DescriptorUtils.modifiedString(confPath, desc);
+        Entry logEntry = conf.registry.getEntryWithKey("log.filename");
+        if (logEntry != null) {
+          logEntry.value = DescriptorUtils.modifiedString(logEntry.value != null ? logEntry.value : "", desc);
         }
-        setVisible(true);
-    }
 
-    @Override
-    public void jobInitialized(Job job) {
-        int cnt = panel.getComponentCount();
-        TextButtonPanel jpp = createComp("Experiment " + (cnt + 1));
-        jpp.setButtonText(INITIALIZED);
-        jpp.getButton().setEnabled(false);
-        panelMap.put(job, jpp);
+        manager.runExperiment(conf, ecfPath, newConfPath, threads, false);
+      }
     }
+    setVisible(true);
+  }
 
-    @Override
-    public void jobStarted(Job job) {
-        SwingUtilities.invokeLater(() -> {
-            if (panelMap.containsKey(job)) {
-                TextButtonPanel jpp = panelMap.get(job);
-                jpp.setButtonText(STARTED);
-            }
+  @Override
+  public void jobInitialized(Job job) {
+    int cnt = panel.getComponentCount();
+    TextButtonPanel jpp = createComp("Experiment " + (cnt + 1));
+    jpp.setButtonText(INITIALIZED);
+    jpp.getButton().setEnabled(false);
+    panelMap.put(job, jpp);
+  }
+
+  @Override
+  public void jobStarted(Job job) {
+    SwingUtilities.invokeLater(() -> {
+      if (panelMap.containsKey(job)) {
+        TextButtonPanel jpp = panelMap.get(job);
+        jpp.setButtonText(STARTED);
+      }
+    });
+  }
+
+  @Override
+  public void jobPartiallyFinished(Job job, LogModel log) {
+    partiallyDone(job, log, RUNNING);
+  }
+
+  @Override
+  public void jobFinished(Job job, LogModel log) {
+    partiallyDone(job, log, FINISHED);
+  }
+
+  private void partiallyDone(Job job, LogModel log, String text) {
+    logMap.put(job, log);
+    SwingUtilities.invokeLater(() -> {
+      if (panelMap.containsKey(job)) {
+        TextButtonPanel jpp = panelMap.get(job);
+        jpp.getButton().setAction(new AbstractAction() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            LogModel l = logMap.get(job);
+            new FrameDisplayer().displayLog(l);
+          }
         });
-    }
+        jpp.setButtonText(text);
+        jpp.getButton().setEnabled(true);
+      }
+    });
+  }
 
-    @Override
-    public void jobFinished(Job job, LogModel log) {
-        logMap.put(job, log);
-        SwingUtilities.invokeLater(() -> {
-            if (panelMap.containsKey(job)) {
-                TextButtonPanel jpp = panelMap.get(job);
-                jpp.getButton().setAction(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        LogModel l = logMap.get(job);
-                        new FrameDisplayer().displayLog(l);
-                    }
-                });
-                jpp.setButtonText(FINISHED);
-                jpp.getButton().setEnabled(true);
-            }
-        });
-    }
-
-    @Override
-    public void jobFailed(Job job) {
-        SwingUtilities.invokeLater(() -> {
-            if (panelMap.containsKey(job)) {
-                TextButtonPanel jpp = panelMap.get(job);
-                jpp.setButtonText(FAILED);
-            }
-        });
-    }
+  @Override
+  public void jobFailed(Job job) {
+    SwingUtilities.invokeLater(() -> {
+      if (panelMap.containsKey(job)) {
+        TextButtonPanel jpp = panelMap.get(job);
+        jpp.setButtonText(FAILED);
+      }
+    });
+  }
 }

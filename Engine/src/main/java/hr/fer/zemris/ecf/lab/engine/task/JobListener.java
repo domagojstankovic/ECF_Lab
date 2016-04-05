@@ -8,12 +8,14 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
  */
 public interface JobListener {
 
-    void jobInitialized(Job job);
+  void jobInitialized(Job job);
 
-    void jobStarted(Job job);
+  void jobStarted(Job job);
 
-    void jobFinished(Job job, LogModel log);
+  void jobPartiallyFinished(Job job, LogModel log);
 
-    void jobFailed(Job job);
+  void jobFinished(Job job, LogModel log);
+
+  void jobFailed(Job job);
 
 }
