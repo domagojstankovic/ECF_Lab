@@ -1,8 +1,7 @@
 package hr.fer.zemris.ecf.lab.view.chart;
 
-import java.awt.BorderLayout;
-
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * Frame for displaying chart with results.
@@ -19,7 +18,7 @@ public class ChartFrame extends JFrame {
 		setLocation(400, 200);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		add(panel, BorderLayout.CENTER);
-		JTextArea textArea = new JTextArea(solution.trim());
+		JTextArea textArea = new JTextArea(solution != null ? solution.trim() : "");
 		textArea.setEditable(false);
 		add(textArea, BorderLayout.SOUTH);
 		pack();
