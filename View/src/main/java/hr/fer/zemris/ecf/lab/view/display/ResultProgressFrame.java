@@ -43,12 +43,13 @@ public class ResultProgressFrame extends TextButtonListFrame implements JobListe
   public void runExperiment(List<Pair<Configuration, List<Pair<String, String>>>> confs,
                             String ecfPath,
                             String confPath,
-                            int threads) {
+                            int threads,
+                            boolean online) {
     panel.removeAll();
     panelMap.clear();
     logMap.clear();
     if (confs.size() == 1) {
-      manager.runExperiment(confs.get(0).getFirst(), ecfPath, confPath, threads, false);
+      manager.runExperiment(confs.get(0).getFirst(), ecfPath, confPath, threads, online);
     } else {
       for (Pair<Configuration, List<Pair<String, String>>> confDesc : confs) {
         // change confPath and log path
@@ -61,7 +62,7 @@ public class ResultProgressFrame extends TextButtonListFrame implements JobListe
           logEntry.value = DescriptorUtils.modifiedString(logEntry.value != null ? logEntry.value : "", desc);
         }
 
-        manager.runExperiment(conf, ecfPath, newConfPath, threads, false);
+        manager.runExperiment(conf, ecfPath, newConfPath, threads, online);
       }
     }
     setVisible(true);
@@ -122,5 +123,5 @@ public class ResultProgressFrame extends TextButtonListFrame implements JobListe
         jpp.setButtonText(FAILED);
       }
     });
-  }
+ }
 }

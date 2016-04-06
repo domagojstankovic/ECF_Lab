@@ -7,17 +7,18 @@ import hr.fer.zemris.ecf.lab.engine.console.DetectOS;
 import hr.fer.zemris.ecf.lab.engine.console.Job;
 import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import hr.fer.zemris.ecf.lab.engine.param.Configuration;
-import hr.fer.zemris.ecf.lab.engine.param.Entry;
-import hr.fer.zemris.ecf.lab.engine.param.EntryBlock;
-import hr.fer.zemris.ecf.lab.engine.param.EntryList;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Domagoj on 07/05/15.
@@ -60,6 +61,10 @@ public class ExperimentsManagerTest {
                 boolean[] arr = map.get(job);
                 assertFalse("This job has already started", arr[0]);
                 arr[0] = true;
+            }
+
+            @Override
+            public void jobPartiallyFinished(Job job, LogModel log) {
             }
 
             @Override
@@ -119,7 +124,7 @@ public class ExperimentsManagerTest {
         delSet.add(confPath);
         int threads = 2;
         manager.setDaemon(true);
-        manager.runExperiment(conf, ecfPath, confPath, threads);
+        manager.runExperiment(conf, ecfPath, confPath, threads, false);
 
         // this has to be done in order to prevent test from finishing until other threads are done
         while (true) {
