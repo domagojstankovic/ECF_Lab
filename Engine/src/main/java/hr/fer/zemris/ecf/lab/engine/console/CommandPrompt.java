@@ -14,7 +14,7 @@ public class CommandPrompt extends AbstractConsole {
     try {
       File file = new File(pardumpPath);
       file.getParentFile().mkdirs();
-      String controlString = "-gui -pardump";
+      String controlString = "-pardump";
       String cmd3 = "\"" + (ecfPath + " " + controlString + " " + pardumpPath) + "\"";
       ProcessBuilder pb = new ProcessBuilder("cmd.exe", "/c", cmd3);
       Process process = pb.start();

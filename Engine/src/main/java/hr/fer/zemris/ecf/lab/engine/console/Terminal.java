@@ -14,7 +14,7 @@ public class Terminal extends AbstractConsole {
         try {
             File file = new File(pardumpPath);
             file.getParentFile().mkdirs();
-            Process process = new ProcessBuilder(ecfPath, "-gui", "-pardump", pardumpPath).start();
+            Process process = new ProcessBuilder(ecfPath, "-pardump", pardumpPath).start();
             process.waitFor();
         } catch (IOException | InterruptedException e) {
             System.err.println("Problem with writing to unix terminal.");
