@@ -10,42 +10,47 @@ import java.util.ArrayList;
  */
 public class Generation {
 
-    /**
-     * ID of the generation, it's number.
-     */
-    public int id;
+  /**
+   * ID of the generation, it's number.
+   */
+  public int id;
 
-    /**
-     * Elapsed time of a generation.
-     */
-    public int elapsedTime;
+  /**
+   * Elapsed time of a generation.
+   */
+  public int elapsedTime;
 
-    /**
-     * Array list of {@link Deme} belonging to this generation.
-     */
-    public ArrayList<Deme> demes;
+  /**
+   * Array list of {@link Deme} belonging to this generation.
+   */
+  public ArrayList<Deme> demes;
 
-    /**
-     * {@link Population} belonging to this generation.
-     */
-    public Population population;
+  /**
+   * {@link Population} belonging to this generation.
+   */
+  public Population population;
 
-    /**
-     * Constructor, it initializes the {@link Deme} list to new array list.
-     */
-    public Generation() {
-        demes = new ArrayList<>();
-    }
+  /**
+   * Hall of fame for this generation.
+   */
+  public String hallOfFame;
 
-    /**
-     * Constructor, it initializes the {@link Deme} list to new array list and it sets id to given id.
-     *
-     * @param id Given id.
-     */
-    public Generation(int id) {
-        this.id = id;
-        demes = new ArrayList<>();
-    }
+  /**
+   * Constructor, it initializes the {@link Deme} list to new array list.
+   */
+  public Generation() {
+    demes = new ArrayList<>();
+  }
+
+  /**
+   * Constructor, it initializes the {@link Deme} list to new array list and it sets id to given id.
+   *
+   * @param id Given id.
+   */
+  public Generation(int id) {
+    this.id = id;
+    demes = new ArrayList<>();
+  }
 
 
 }
