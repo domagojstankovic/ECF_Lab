@@ -28,6 +28,7 @@ public class DefaultLogReader implements LogReader {
     private static final String DEME_PREFIX = "Deme:";
     private static final String ELAPSED_TIME_PREFIX = "Elapsed time:";
     private static final String BEST_OF_RUN_PREFIX = "Best of run:";
+    private static final String BEST_IN_PREFIX = "Best in";
     private static final String EVALUATIONS_PREFIX = "Evaluations:";
     private static final String STATS_PREFIX = "Stats:";
 
@@ -125,13 +126,34 @@ public class DefaultLogReader implements LogReader {
         } else if (ll.startsWith(BEST_OF_RUN_PREFIX)) {
           run.getGenerations().add(generation);
           run.setHallOfFame(hallOfFameState());
+          generation = null;
           break;
+        } else if (ll.startsWith(BEST_IN_PREFIX)) {
+          invalidateLine();
+          generation.hallOfFame = readUntilEmptyLine();
         } else {
           invalidateLine();
         }
       }
 
+      if (generation != null) {
+        run.getGenerations().add(generation);
+      }
+
       return run;
+    }
+
+    private String readUntilEmptyLine() {
+      StringBuilder sb = new StringBuilder();
+      while (hasNextLine()) {
+        String line = popNextLine();
+        if (line.trim().isEmpty()) {
+          break;
+        }
+        sb.append(line).append("\n");
+      }
+      sb.deleteCharAt(sb.length() - 1); // delete last '\n'
+      return sb.toString();
     }
 
     private String hallOfFameState() {

@@ -1,0 +1,50 @@
+-- ECF, version 1.4.1 --
+Parsing configuration file: parameters4.txt
+Warning: key linear_scaling not registered.
+Running in batch mode: run 1/1
+Start time: Tue Apr 12 14:41:57 2016
+
+Evaluating initial population...
+Generation: 0
+Elapsed time: 0
+Deme: 0
+Evaluations: 500
+Stats: fitness
+	max: 1.28629e+16
+	min: 0.00986234
+	avg: 2.57259e+13
+	stdev: 5.75247e+14
+
+Best in 0
+<Individual size="1">
+	<FitnessMin value="0.00986234"/>
+	<Tree size="5">- - 1 3 2 </Tree>
+</Individual>
+
+Generation: 10
+Elapsed time: 0
+Deme: 0
+Evaluations: 5500
+Stats: fitness
+	max: 151429
+	min: 0.00929832
+	avg: 302.933
+	stdev: 6772.11
+
+Best in 10
+<Individual size="1">
+	<FitnessMin value="0.00929832"/>
+	<Tree size="10">- - sin / / 1 x1 1 1 3 </Tree>
+</Individual>
+
+Termination: fitness value (1e-07) reached
+
+Best of run:
+<HallOfFame size="1">
+	<Individual size="1" gen="14">
+		<FitnessMin value="1.49756e-21"/>
+		<Tree size="10">- - sin / x1 + 2 1 1 3 </Tree>
+	</Individual>
+</HallOfFame>
+
+Batch mode end (1 runs concluded).
