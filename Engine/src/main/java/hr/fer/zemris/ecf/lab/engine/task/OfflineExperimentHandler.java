@@ -13,9 +13,15 @@ import java.io.InputStream;
  */
 public class OfflineExperimentHandler implements JobObserver {
   protected JobListener listener;
+  private StatsHandler statsHandler;
 
   public OfflineExperimentHandler(JobListener listener) {
     this.listener = listener;
+  }
+
+  public OfflineExperimentHandler(JobListener listener, StatsHandler statsHandler) {
+    this(listener);
+    this.statsHandler = statsHandler;
   }
 
   @Override
@@ -29,6 +35,7 @@ public class OfflineExperimentHandler implements JobObserver {
     InputStream is = output.getStdout();
     LogModel log = LogReaderProvider.getReader().read(is);
     listener.jobFinished(job, log);
+    statsHandler.finished();
   }
 
   @Override
