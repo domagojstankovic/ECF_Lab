@@ -12,7 +12,7 @@ import java.io.InputStream;
  * Created by dstankovic on 4/5/16.
  */
 public class OfflineExperimentHandler implements JobObserver {
-  private JobListener listener;
+  protected JobListener listener;
 
   public OfflineExperimentHandler(JobListener listener) {
     this.listener = listener;
