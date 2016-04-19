@@ -6,6 +6,7 @@ import hr.fer.zemris.ecf.lab.engine.log.LogModel;
 import org.junit.Test;
 
 import java.io.FileInputStream;
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -23,7 +24,7 @@ public class DefaultLogReaderTest {
         "\t\t<FitnessMax value=\"10\"/>\n" +
         "\t\t<BitString size=\"10\">1111111111</BitString>\n" +
         "\t</Individual>\n" +
-        "</HallOfFame>\n";
+        "</HallOfFame>";
     assertTrue("Hall of fame error", log.getRuns().get(0).getHallOfFame().equals(hofString));
 
     assertTrue("Generations num error", log.getRuns().get(0).getGenerations().size() == 31);
@@ -49,7 +50,7 @@ public class DefaultLogReaderTest {
         "\t\t<FitnessMax value=\"20\"/>\n" +
         "\t\t<BitString size=\"20\">11111111111111111111</BitString>\n" +
         "\t</Individual>\n" +
-        "</HallOfFame>\n";
+        "</HallOfFame>";
     assertTrue("Hall of fame error", run.getHallOfFame().equals(hofString));
 
     assertTrue("Generations num error", run.getGenerations().size() == 51);
@@ -105,5 +106,15 @@ public class DefaultLogReaderTest {
     LogModel log = reader.read(new FileInputStream("res/test/log_with_generation_hof_partial.txt"));
 
     assertTrue(log.getRuns().get(0).getGenerations().size() == 1);
+  }
+
+  @Test
+  public void testOtherLines() throws Exception {
+    DefaultLogReader reader = new DefaultLogReader();
+    LogModel log = reader.read(new FileInputStream("res/test/log_srm.txt"));
+
+    List<String> otherLines = log.getRuns().get(0).getOtherLines();
+    assertTrue(otherLines.get(0).equals("Termination: fitness value (1e-07) reached"));
+    assertTrue(otherLines.get(otherLines.size() - 1).equals("Linear scaling parameters: scale=-1 offset=-4.41615"));
   }
 }

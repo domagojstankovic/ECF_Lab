@@ -4,6 +4,8 @@ import hr.fer.zemris.ecf.lab.engine.log.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -23,7 +25,6 @@ public class DefaultLogReader implements LogReader {
 
     private static final String ERROR_PREFIX = "Error:";
     private static final String GENERATION_PREFIX = "Generation:";
-    private static final String HALL_OF_FAME_END = "</HallOfFame>";
     private static final String POPULATION_PREFIX = "Population:";
     private static final String DEME_PREFIX = "Deme:";
     private static final String ELAPSED_TIME_PREFIX = "Elapsed time:";
@@ -31,6 +32,7 @@ public class DefaultLogReader implements LogReader {
     private static final String BEST_IN_PREFIX = "Best in";
     private static final String EVALUATIONS_PREFIX = "Evaluations:";
     private static final String STATS_PREFIX = "Stats:";
+    private static final String EVALUATING_INITIAL_POPULATION = "Evaluating initial population...";
 
     private static final String MAX_PREFIX = "max:";
     private static final String MIN_PREFIX = "min:";
@@ -75,7 +77,8 @@ public class DefaultLogReader implements LogReader {
         String line = nextLine();
         if (line.startsWith(ERROR_PREFIX)) {
           return errorState();
-        } else if (line.startsWith(GENERATION_PREFIX)) {
+        } else if (line.startsWith(EVALUATING_INITIAL_POPULATION)) {
+          invalidateLine();
           ExperimentRun run = generationState();
           runs.add(run);
         } else {
@@ -104,6 +107,7 @@ public class DefaultLogReader implements LogReader {
     private ExperimentRun generationState() {
       ExperimentRun run = new ExperimentRun(new ArrayList<>());
       Generation generation = new Generation(Integer.parseInt(extractValue(popNextLine())));
+      List<String> otherLines = new LinkedList<>();
 
       while (hasNextLine()) {
         String ll = nextLine();
@@ -124,14 +128,18 @@ public class DefaultLogReader implements LogReader {
           run.getGenerations().add(generation);
           generation = new Generation(Integer.parseInt(extractValue(popNextLine())));
         } else if (ll.startsWith(BEST_OF_RUN_PREFIX)) {
+          invalidateLine();
           run.getGenerations().add(generation);
-          run.setHallOfFame(hallOfFameState());
+          String hof = readUntilEmptyLine();
+          run.setHallOfFame(hof);
           generation = null;
-          break;
         } else if (ll.startsWith(BEST_IN_PREFIX)) {
           invalidateLine();
           generation.hallOfFame = readUntilEmptyLine();
+        } else if (ll.startsWith(EVALUATING_INITIAL_POPULATION)) {
+          break;
         } else {
+          otherLines.add(ll);
           invalidateLine();
         }
       }
@@ -139,6 +147,8 @@ public class DefaultLogReader implements LogReader {
       if (generation != null) {
         run.getGenerations().add(generation);
       }
+
+      run.setOtherLines(otherLines);
 
       return run;
     }
@@ -153,20 +163,6 @@ public class DefaultLogReader implements LogReader {
         sb.append(line).append("\n");
       }
       sb.deleteCharAt(sb.length() - 1); // delete last '\n'
-      return sb.toString();
-    }
-
-    private String hallOfFameState() {
-      invalidateLine();
-      StringBuilder sb = new StringBuilder();
-      while (hasNextLine()) {
-        String line = popNextLine();
-        sb.append(line);
-        sb.append("\n");
-        if (line.trim().equals(HALL_OF_FAME_END)) {
-          break;
-        }
-      }
       return sb.toString();
     }
 
