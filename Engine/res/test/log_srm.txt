@@ -1,0 +1,35 @@
+-- ECF, version 1.4.1 --
+Parsing configuration file: parameters4.txt
+Running in batch mode: run 1/1
+Start time: Tue Apr 19 15:58:34 2016
+
+Evaluating initial population...
+Generation: 0
+Elapsed time: 0
+Deme: 0
+Evaluations: 500
+Stats: fitness
+	max: 1e+14
+	min: 0.123606
+	avg: 6e+12
+	stdev: 2.37725e+13
+
+Best in 0
+<Individual size="1">
+	<FitnessMin value="0.123606"/>
+	<Tree size="25">+ cos / * - 3 2 cos 3 + / x1 1 / 2 3 sin cos * * x1 3 * 1 2 </Tree>
+</Individual>
+
+Termination: fitness value (1e-07) reached
+
+Best of run:
+<HallOfFame size="1">
+	<Individual size="1" gen="9">
+		<FitnessMin value="9.80899e-39"/>
+		<Tree size="9">- cos 2 sin * x1 / 1 3 </Tree>
+	</Individual>
+</HallOfFame>
+
+Batch mode end (1 runs concluded).
+
+Linear scaling parameters: scale=-1 offset=-4.41615
