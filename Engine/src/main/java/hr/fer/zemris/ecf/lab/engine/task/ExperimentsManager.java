@@ -105,12 +105,20 @@ public class ExperimentsManager {
     List<FileOutputPair> fileOutputPairs = online ? new ArrayList<>(repeats) : null;
 
     int len = Integer.valueOf(repeats).toString().length();
+
     Entry logFilenameEntry = Utils.findEntry(registryList, "log.filename");
     String originalLogFilename = null;
-
     if (logFilenameEntry != null) {
       originalLogFilename = logFilenameEntry.value;
     }
+
+    Entry statsfileEntry = Utils.findEntry(registryList, "batch.statsfile");
+    String originalStatsfile = null;
+    if (statsfileEntry != null) {
+      originalStatsfile = statsfileEntry.value;
+    }
+
+    StatsSupervisor supervisor = new StatsSupervisor(originalStatsfile, repeats);
 
     for (int i = 0; i < repeats; i++) {
       // change configuration (log.filename) and write it to changed location
@@ -119,15 +127,33 @@ public class ExperimentsManager {
         logFilenameEntry.value = Utils.addBeforeExtension(originalLogFilename, (i + 1), len);
       }
 
+      // statsfile
+      if (originalStatsfile != null) {
+        try {
+          File tempFile = File.createTempFile("ecf-statsfile", ".txt");
+          statsfileEntry.value = tempFile.getAbsolutePath();
+        } catch (IOException e) {
+          e.printStackTrace();
+          statsfileEntry.value = Utils.addBeforeExtension(originalStatsfile, (i + 1), len);
+        }
+      }
+
       ConfigurationService.getInstance().getWriter().write(new File(currConfPath), conf);
+
+      StatsHandler statsHandler = new StatsHandler(statsfileEntry.value, supervisor);
 
       Job job = new Job(ecfPath, currConfPath, true);
       if (online) {
         FileOutputPair fileOutputPair = generateOnlineFileOutputs();
-        job.setObserver(new OnlineExperimentHandler(listener, fileOutputPair.stdout, fileOutputPair.stderr));
+        job.setObserver(new OnlineExperimentHandler(
+            listener,
+            fileOutputPair.stdout,
+            fileOutputPair.stderr,
+            statsHandler)
+        );
         fileOutputPairs.add(fileOutputPair);
       } else {
-        job.setObserver(new OfflineExperimentHandler(listener));
+        job.setObserver(new OfflineExperimentHandler(listener, statsHandler));
       }
       jobs.add(job);
     }

@@ -27,6 +27,10 @@ public class OnlineExperimentHandler extends OfflineExperimentHandler {
     this.stderrFile = stderrFile;
   }
 
+  public OnlineExperimentHandler(JobListener listener, File stdout, File stderr, StatsHandler statsHandler) {
+    super(listener, statsHandler);
+  }
+
   @Override
   public void jobStarted(Job job) {
     super.jobStarted(job);
