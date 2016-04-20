@@ -140,7 +140,7 @@ public class ExperimentsManager {
 
       ConfigurationService.getInstance().getWriter().write(new File(currConfPath), conf);
 
-      StatsHandler statsHandler = new StatsHandler(statsfileEntry.value, supervisor);
+      StatsHandler statsHandler = statsfileEntry != null ? new StatsHandler(statsfileEntry.value, supervisor) : null;
 
       Job job = new Job(ecfPath, currConfPath, true);
       if (online) {

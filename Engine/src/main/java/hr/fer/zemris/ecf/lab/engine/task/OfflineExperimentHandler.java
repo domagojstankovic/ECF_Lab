@@ -35,7 +35,10 @@ public class OfflineExperimentHandler implements JobObserver {
     InputStream is = output.getStdout();
     LogModel log = LogReaderProvider.getReader().read(is);
     listener.jobFinished(job, log);
-    statsHandler.finished();
+
+    if (statsHandler != null) {
+      statsHandler.finished();
+    }
   }
 
   @Override
