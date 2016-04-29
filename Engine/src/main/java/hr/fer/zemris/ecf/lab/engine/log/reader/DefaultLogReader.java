@@ -162,7 +162,9 @@ public class DefaultLogReader implements LogReader {
         }
         sb.append(line).append("\n");
       }
-      sb.deleteCharAt(sb.length() - 1); // delete last '\n'
+      if (sb.length() > 0) {
+        sb.deleteCharAt(sb.length() - 1); // delete last '\n'
+      }
       return sb.toString();
     }
 
