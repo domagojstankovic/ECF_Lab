@@ -37,7 +37,7 @@ public class OfflineExperimentHandler implements JobObserver {
     listener.jobFinished(job, log);
 
     if (statsHandler != null) {
-      statsHandler.finished();
+      statsHandler.finished(job);
     }
   }
 

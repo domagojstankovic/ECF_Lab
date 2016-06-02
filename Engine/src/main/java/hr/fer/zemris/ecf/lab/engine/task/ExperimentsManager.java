@@ -122,7 +122,8 @@ public class ExperimentsManager {
 
     for (int i = 0; i < repeats; i++) {
       // change configuration (log.filename) and write it to changed location
-      String currConfPath = confPath + ".part__" + (i + 1);
+      int runId = i + 1;
+      String currConfPath = confPath + ".part__" + runId;
       if (originalLogFilename != null) {
         logFilenameEntry.value = Utils.addBeforeExtension(originalLogFilename, (i + 1), len);
       }
@@ -142,7 +143,7 @@ public class ExperimentsManager {
 
       StatsHandler statsHandler = statsfileEntry != null ? new StatsHandler(statsfileEntry.value, supervisor) : null;
 
-      Job job = new Job(ecfPath, currConfPath, true);
+      Job job = new Job(ecfPath, currConfPath, true, runId);
       if (online) {
         FileOutputPair fileOutputPair = generateOnlineFileOutputs();
         job.setObserver(new OnlineExperimentHandler(

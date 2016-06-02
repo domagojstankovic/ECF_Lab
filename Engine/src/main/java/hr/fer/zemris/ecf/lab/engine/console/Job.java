@@ -18,6 +18,7 @@ public class Job {
 	private String ecfPath;
 	private String configPath;
 	private boolean shouldDeleteConf;
+	private Integer runId;
 	
 	private JobObserver observer = null;
 
@@ -31,15 +32,18 @@ public class Job {
 	 *            path to the parameters that are given to the ECF.
 	 */
 	public Job(String ecfPath, String configPath) {
-		this.ecfPath = ecfPath;
-		this.configPath = configPath;
-		shouldDeleteConf = false;
+		this(ecfPath, configPath, false);
 	}
 
 	public Job(String ecfPath, String configPath, boolean shouldDeleteConf) {
+		this(ecfPath, configPath, shouldDeleteConf, null);
+	}
+
+	public Job(String ecfPath, String configPath, boolean shouldDeleteConf, Integer runId) {
 		this.ecfPath = ecfPath;
 		this.configPath = configPath;
 		this.shouldDeleteConf = shouldDeleteConf;
+		this.runId = runId;
 	}
 
 	public String getConfigPath() {
@@ -78,4 +82,7 @@ public class Job {
 		}
 	}
 
+	public Integer getRunId() {
+		return runId;
+	}
 }
