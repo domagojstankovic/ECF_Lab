@@ -89,7 +89,9 @@ public class ResultProgressFrame extends TextButtonListFrame implements JobListe
 
   @Override
   public void jobPartiallyFinished(Job job, LogModel log) {
-    partiallyDone(job, log, RUNNING);
+    if (!job.isFinished()) {
+      partiallyDone(job, log, RUNNING);
+    }
   }
 
   @Override
