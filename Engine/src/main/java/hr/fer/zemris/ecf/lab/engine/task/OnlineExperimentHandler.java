@@ -7,7 +7,6 @@ import hr.fer.zemris.ecf.lab.engine.log.reader.LogReaderProvider;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,7 +58,7 @@ public class OnlineExperimentHandler extends OfflineExperimentHandler {
         try {
           LogModel log = LogReaderProvider.getReader().read(new FileInputStream(stdoutFile));
           listener.jobPartiallyFinished(job, log);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
           e.printStackTrace();
         }
       }
